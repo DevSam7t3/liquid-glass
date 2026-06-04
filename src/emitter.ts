@@ -18,35 +18,35 @@ type AnyFn = (...args: any[]) => void;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class EventEmitter<T = Record<string, any>> {
-    private readonly _ev = new Map<keyof T, Set<AnyFn>>();
+  private readonly _ev = new Map<keyof T, Set<AnyFn>>();
 
-    on<K extends keyof T>(event: K, fn: (payload: T[K]) => void): this {
-        if (!this._ev.has(event)) this._ev.set(event, new Set());
-        this._ev.get(event)!.add(fn as AnyFn);
-        return this;
-    }
+  on<K extends keyof T>(event: K, fn: (payload: T[K]) => void): this {
+    if (!this._ev.has(event)) this._ev.set(event, new Set());
+    this._ev.get(event)!.add(fn as AnyFn);
+    return this;
+  }
 
-    off<K extends keyof T>(event: K, fn?: AnyFn): this {
-        if (!this._ev.has(event)) return this;
-        if (fn) this._ev.get(event)!.delete(fn);
-        else    this._ev.get(event)!.clear();
-        return this;
-    }
+  off<K extends keyof T>(event: K, fn?: AnyFn): this {
+    if (!this._ev.has(event)) return this;
+    if (fn) this._ev.get(event)!.delete(fn);
+    else this._ev.get(event)!.clear();
+    return this;
+  }
 
-    once<K extends keyof T>(event: K, fn: (payload: T[K]) => void): this {
-        const wrapper = (payload: T[K]) => {
-            this.off(event, wrapper as AnyFn);
-            fn(payload);
-        };
-        return this.on(event, wrapper);
-    }
+  once<K extends keyof T>(event: K, fn: (payload: T[K]) => void): this {
+    const wrapper = (payload: T[K]) => {
+      this.off(event, wrapper as AnyFn);
+      fn(payload);
+    };
+    return this.on(event, wrapper);
+  }
 
-    /**
-     * @internal — fire an event.
-     * Payload is optional so no-arg events can be fired as `_emit('destroy')`.
-     */
-    _emit<K extends keyof T>(event: K, payload?: T[K]): this {
-        this._ev.get(event)?.forEach(fn => fn(payload));
-        return this;
-    }
+  /**
+   * @internal — fire an event.
+   * Payload is optional so no-arg events can be fired as `_emit('destroy')`.
+   */
+  _emit<K extends keyof T>(event: K, payload?: T[K]): this {
+    this._ev.get(event)?.forEach((fn) => fn(payload));
+    return this;
+  }
 }

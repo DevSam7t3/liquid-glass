@@ -16,290 +16,290 @@
    ============================================================ */
 
 :root {
-    --lg-tint:       rgba(255, 255, 255, 0.05);
-    --lg-border:     rgba(255, 255, 255, 0.20);
-    --lg-shadow-out: 0 10px 30px rgba(0, 0, 0, 0.30);
-    --lg-shadow-hi:  inset 0  2px  5px rgba(255, 255, 255, 0.25);
-    --lg-shadow-lo:  inset 0 -2px  5px rgba(0, 0, 0, 0.15);
-    --lg-accent:     #3b82f6;
-    --lg-accent-2:   #60a5fa;
+  --lg-tint: rgba(255, 255, 255, 0.05);
+  --lg-border: rgba(255, 255, 255, 0.2);
+  --lg-shadow-out: 0 10px 30px rgba(0, 0, 0, 0.3);
+  --lg-shadow-hi: inset 0 2px 5px rgba(255, 255, 255, 0.25);
+  --lg-shadow-lo: inset 0 -2px 5px rgba(0, 0, 0, 0.15);
+  --lg-accent: #3b82f6;
+  --lg-accent-2: #60a5fa;
 }
 
 /* ── Injected glass layers ──────────────────────────────────── */
 
 .lg-inner {
-    position:       absolute;
-    inset:          0;
-    border-radius:  inherit;
-    pointer-events: none;
-    z-index:        3;
-    background:     var(--lg-tint);
-    border:         1px solid var(--lg-border);
-    box-shadow:     var(--lg-shadow-out),
-                    var(--lg-shadow-hi),
-                    var(--lg-shadow-lo);
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 3;
+  background: var(--lg-tint);
+  border: 1px solid var(--lg-border);
+  box-shadow: var(--lg-shadow-out), var(--lg-shadow-hi), var(--lg-shadow-lo);
 }
 
 .lg-clone {
-    position:    absolute;
-    inset:       0;
-    overflow:    hidden;
-    border-radius: inherit;
-    z-index:     1;
-    contain:     strict;
-    will-change: filter, transform;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  z-index: 1;
+  contain: strict;
+  will-change: filter, transform;
 }
 
 .lg-clone-world {
-    position:    absolute;
-    top:         0;
-    left:        0;
-    pointer-events: none;
-    will-change: transform;
-    transform-origin: top left;
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  will-change: transform;
+  transform-origin: top left;
 }
 
 /* ── Button ─────────────────────────────────────────────────── */
 
 .lg-button {
-    position:       relative;
-    display:        inline-flex;
-    align-items:    center;
-    justify-content: center;
-    border-radius:  100px;
-    will-change:    transform;
-    cursor:         pointer;
-    user-select:    none;
-    touch-action:   none;
-    min-width:      120px;
-    min-height:     48px;
-    padding:        0 1.5rem;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100px;
+  will-change: transform;
+  cursor: pointer;
+  user-select: none;
+  touch-action: none;
+  min-width: 120px;
+  min-height: 48px;
+  padding: 0 1.5rem;
 }
 
 .lg-button-text {
-    position:        relative;
-    z-index:         5;
-    font-weight:     700;
-    color:           #fff;
-    letter-spacing:  .05em;
-    font-size:       1rem;
-    text-shadow:     0 2px 10px rgba(0, 0, 0, .5);
-    pointer-events:  none;
+  position: relative;
+  z-index: 5;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.05em;
+  font-size: 1rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
 }
 
 /* ── Switch ─────────────────────────────────────────────────── */
 
 .lg-switch-track {
-    position:        relative;
-    display:         inline-block;
-    width:           160px;
-    height:          67px;
-    background:      rgba(255, 255, 255, .05);
-    border:          1px solid rgba(255, 255, 255, .05);
-    border-radius:   100px;
-    cursor:          pointer;
-    box-shadow:      inset 0 2px 10px rgba(0, 0, 0, .5);
-    transition:      background-color .25s ease;
+  position: relative;
+  display: inline-block;
+  width: 160px;
+  height: 67px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 100px;
+  cursor: pointer;
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
+  transition: background-color 0.25s ease;
 }
 
 .lg-switch-thumb {
-    position:        absolute;
-    width:           146px;
-    height:          92px;
-    border-radius:   46px;
-    top:             33.5px;
-    transform:       translateY(-50%) scale(.65);
-    transform-origin: center center;
-    cursor:          pointer;
-    touch-action:    none;
-    user-select:     none;
-    background:      #fff;
-    box-shadow:      0 10px 30px rgba(0, 0, 0, .5);
-    overflow:        hidden;
-    will-change:     transform, left, background-color;
-    z-index:         10;
+  position: absolute;
+  width: 146px;
+  height: 92px;
+  border-radius: 46px;
+  top: 33.5px;
+  transform: translateY(-50%) scale(0.65);
+  transform-origin: center center;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  will-change: transform, left, background-color;
+  z-index: 10;
 }
 
 /* ── Slider ─────────────────────────────────────────────────── */
 
 .lg-slider {
-    position:   relative;
-    width:      330px;
-    height:     60px;
+  position: relative;
+  width: 330px;
+  height: 60px;
 }
 
 .lg-slider-track {
-    position:      absolute;
-    width:         330px;
-    height:        18px;
-    left:          0;
-    top:           21px;
-    background:    rgba(255, 255, 255, .05);
-    border-radius: 100px;
-    cursor:        pointer;
-    box-shadow:    inset 0 2px 4px rgba(0, 0, 0, .5);
-    overflow:      hidden;
+  position: absolute;
+  width: 330px;
+  height: 18px;
+  left: 0;
+  top: 21px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 100px;
+  cursor: pointer;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
 }
 
 .lg-slider-fill {
-    height:        100%;
-    border-radius: 100px;
-    background:    linear-gradient(90deg, var(--lg-accent), var(--lg-accent-2));
-    box-shadow:    0 0 10px rgba(59, 130, 246, .5);
-    transition:    width .05s linear;
+  height: 100%;
+  border-radius: 100px;
+  background: linear-gradient(90deg, var(--lg-accent), var(--lg-accent-2));
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+  transition: width 0.05s linear;
 }
 
 .lg-slider-thumb {
-    position:        absolute;
-    width:           90px;
-    height:          60px;
-    top:             0;
-    border-radius:   30px;
-    transform:       scale(.6);
-    transform-origin: center center;
-    cursor:          pointer;
-    touch-action:    none;
-    user-select:     none;
-    background:      #fff;
-    box-shadow:      0 3px 14px rgba(0, 0, 0, .3);
-    overflow:        hidden;
-    will-change:     transform, background-color;
-    z-index:         10;
+  position: absolute;
+  width: 90px;
+  height: 60px;
+  top: 0;
+  border-radius: 30px;
+  transform: scale(0.6);
+  transform-origin: center center;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  background: #fff;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  will-change: transform, background-color;
+  z-index: 10;
 }
 
 /* ── Cursor ─────────────────────────────────────────────────── */
 
 .lg-cursor {
-    position:        absolute;
-    border-radius:   50%;
-    pointer-events:  none;
-    z-index:         9999;
-    will-change:     transform;
-    opacity:         0;
-    transition:      opacity .3s ease;
-    transform-origin: center center;
-    overflow:        hidden;
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  will-change: transform;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  transform-origin: center center;
+  overflow: hidden;
 }
 
 .lg-cursor.lg-cursor-visible {
-    opacity: 1;
+  opacity: 1;
 }
 
 /* ── Input ──────────────────────────────────────────────────── */
 
 .lg-input-wrapper {
-    position:   relative;
-    width:      340px;
-    height:     60px;
-    will-change: transform;
+  position: relative;
+  width: 340px;
+  height: 60px;
+  will-change: transform;
 }
 
 .lg-input-field {
-    position:        absolute;
-    inset:           0;
-    width:           100%;
-    height:          100%;
-    border:          none;
-    background:      transparent;
-    padding:         0 1.5rem;
-    font-family:     inherit;
-    font-size:       1rem;
-    font-weight:     600;
-    color:           #fff;
-    outline:         none;
-    z-index:         5;
-    letter-spacing:  0.03em;
-    border-radius:   100px;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: transparent;
+  padding: 0 1.5rem;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  outline: none;
+  z-index: 5;
+  letter-spacing: 0.03em;
+  border-radius: 100px;
 }
 
 .lg-input-field::placeholder {
-    color: rgba(255, 255, 255, .4);
+  color: rgba(255, 255, 255, 0.4);
 }
 
 /* ── Dial ───────────────────────────────────────────────────── */
 
 .lg-dial {
-    position:   relative;
-    display:    inline-flex;
-    align-items: center;
-    justify-content: center;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .lg-dial-knob {
-    width:           140px;
-    height:          140px;
-    border-radius:   50%;
-    cursor:          grab;
-    touch-action:    none;
-    user-select:     none;
-    will-change:     transform;
-    overflow:        hidden;
-    z-index:         10;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  will-change: transform;
+  overflow: hidden;
+  z-index: 10;
 }
 
-.lg-dial-knob:active { cursor: grabbing; }
+.lg-dial-knob:active {
+  cursor: grabbing;
+}
 
 .lg-dial-indicator {
-    position:      absolute;
-    top:           14px;
-    left:          50%;
-    transform:     translateX(-50%);
-    width:         8px;
-    height:        8px;
-    border-radius: 50%;
-    background:    #fff;
-    box-shadow:    0 0 12px rgba(255, 255, 255, .8);
-    z-index:       5;
-    pointer-events: none;
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
+  z-index: 5;
+  pointer-events: none;
 }
 
 /* ── Tooltip ────────────────────────────────────────────────── */
 
 .lg-tooltip {
-    position:        absolute;
-    pointer-events:  none;
-    transform-origin: bottom center;
-    will-change:     transform, opacity;
-    overflow:        hidden;
-    white-space:     nowrap;
+  position: absolute;
+  pointer-events: none;
+  transform-origin: bottom center;
+  will-change: transform, opacity;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .lg-tooltip-text {
-    position:        absolute;
-    inset:           0;
-    display:         flex;
-    align-items:     center;
-    justify-content: center;
-    font-size:       .9rem;
-    font-weight:     700;
-    color:           #fff;
-    text-shadow:     0 2px 5px rgba(0, 0, 0, .4);
-    z-index:         5;
-    pointer-events:  none;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+  z-index: 5;
+  pointer-events: none;
 }
 
 /* ── Progress ───────────────────────────────────────────────── */
 
 .lg-progress {
-    position:      relative;
-    height:        36px;
-    border-radius: 18px;
-    background:    rgba(0, 0, 0, .3);
-    box-shadow:    inset 0 4px 10px rgba(0, 0, 0, .5);
-    overflow:      hidden;
-    will-change:   transform;
+  position: relative;
+  height: 36px;
+  border-radius: 18px;
+  background: rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  will-change: transform;
 }
 
 .lg-progress-fill {
-    position:      absolute;
-    top:           0;
-    left:          0;
-    height:        100%;
-    width:         0%;
-    border-radius: inherit;
-    background:    linear-gradient(90deg, var(--lg-accent), var(--lg-accent-2));
-    box-shadow:    0 0 15px rgba(59, 130, 246, .4);
-    pointer-events: none;
-    z-index:       2;
-    transition:    none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--lg-accent), var(--lg-accent-2));
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+  pointer-events: none;
+  z-index: 2;
+  transition: none;
 }

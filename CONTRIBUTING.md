@@ -12,12 +12,13 @@ This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md). By particip
 
 ## Ways to contribute
 
-| Type | Where |
-|------|-------|
-| Bug report | [New issue → Bug Report](.github/ISSUE_TEMPLATE/bug_report.yml) |
-| Feature request | [New issue → Feature Request](.github/ISSUE_TEMPLATE/feature_request.yml) |
-| Documentation | PR against `main` |
-| Code fix / feature | PR against `main` (see below) |
+| Type                | Where                                                                       |
+| ------------------- | --------------------------------------------------------------------------- |
+| Support / Questions | [GitHub Discussions](https://github.com/DevSam7t3/liquid-glass/discussions) |
+| Bug report          | [New issue → Bug Report](.github/ISSUE_TEMPLATE/bug_report.yml)             |
+| Feature request     | [New issue → Feature Request](.github/ISSUE_TEMPLATE/feature_request.yml)   |
+| Documentation       | PR against `main`                                                           |
+| Code fix / feature  | PR against `main` (see below)                                               |
 
 ---
 
@@ -25,8 +26,8 @@ This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md). By particip
 
 ```bash
 # 1 — Fork and clone
-git clone https://github.com/<your-username>/liquid-lens.git
-cd liquid-lens
+git clone https://github.com/<your-username>/liquid-glass.git
+cd liquid-glass
 
 # 2 — Install dev dependencies
 npm install
@@ -43,9 +44,14 @@ npm test
 
 # 6 — Type-check without emitting
 npm run typecheck
+
+# 7 — Lint and format
+npm run lint
+npm run format
 ```
 
 > **Note:** The SVG `backdrop-filter` displacement effect is **Chromium-only**. Use Chrome for visual testing.
+> **Git Hooks:** This project uses Husky to run linting and formatting on every commit. If your code doesn't meet the style guidelines, the commit will be blocked.
 
 ---
 
@@ -73,6 +79,7 @@ demo/             Standalone HTML showcase
 ## Pull Request process
 
 1. **Create a branch** off `main`:
+
    ```bash
    git checkout -b fix/your-bug-description
    # or
@@ -82,12 +89,14 @@ demo/             Standalone HTML showcase
 2. **Make your changes.** Keep commits focused — one logical change per commit.
 
 3. **Verify everything passes:**
+
    ```bash
    npm run typecheck   # zero TypeScript errors
-   npm test            # build + 11 unit tests pass
+   npm run lint        # zero linting errors
+   npm test            # build + unit tests pass
    ```
 
-4. **Open a PR against `main`** using the PR template.  
+4. **Open a PR against `main`** using the PR template.
    - Reference any related issue with `Closes #123`.
    - If it's a new component or API change, update `README.md` and `CHANGELOG.md`.
 
@@ -99,15 +108,15 @@ demo/             Standalone HTML showcase
 
 This project uses [Conventional Commits](https://www.conventionalcommits.org/):
 
-| Prefix | When to use |
-|--------|-------------|
-| `feat:` | New component or API |
-| `fix:` | Bug fix |
-| `docs:` | README, CHANGELOG, code comments |
+| Prefix      | When to use                           |
+| ----------- | ------------------------------------- |
+| `feat:`     | New component or API                  |
+| `fix:`      | Bug fix                               |
+| `docs:`     | README, CHANGELOG, code comments      |
 | `refactor:` | Code change with no functional effect |
-| `test:` | New or updated tests |
-| `chore:` | Build tooling, dependencies, CI |
-| `perf:` | Performance improvement |
+| `test:`     | New or updated tests                  |
+| `chore:`    | Build tooling, dependencies, CI       |
+| `perf:`     | Performance improvement               |
 
 ---
 
@@ -124,18 +133,29 @@ This project uses [Conventional Commits](https://www.conventionalcommits.org/):
 
 ---
 
-## Releases (maintainers only)
+## Releases
 
-Releases are fully automated via GitHub Actions:
+Releases are automated via GitHub Actions. There are two ways to trigger a release:
 
-1. Update `CHANGELOG.md` — move items from `[Unreleased]` to a new `[x.y.z]` section.
-2. Bump `version` in `package.json`.
-3. Commit: `git commit -m "chore: release x.y.z"`
-4. Tag: `git tag vx.y.z`
-5. Push: `git push origin main --tags`
+### 1. Automated (Recommended)
 
-The CI will automatically:
-- Build all bundles
-- Run the full test suite + type-check
-- Create a GitHub Release with `.zip` and `.tar.gz` archives
-- Publish to npm
+1. Go to the **Actions** tab in the GitHub repository.
+2. Select the **Release** workflow.
+3. Click **Run workflow**, choose the branch (`main`) and the version bump type (`patch`, `minor`, or `major`).
+4. The workflow will automatically:
+   - Update `package.json` version
+   - Create and push a Git tag
+   - Build and test the project
+   - Create a GitHub Release with build assets
+   - Publish to NPM
+
+### 2. Semi-automated (Manual Tag)
+
+If you prefer to bump the version and tag locally:
+
+1. Update `CHANGELOG.md`.
+2. Run `npm version <patch|minor|major>`.
+3. Push tags: `git push origin main --tags`.
+4. The **Release** workflow will trigger automatically to handle the GitHub Release and NPM publishing.
+
+> **Note:** Ensure you have added `NPM_TOKEN` to your GitHub repository secrets for the publishing step to succeed.

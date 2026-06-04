@@ -1,523 +1,997 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@avenra/liquid-glass — Demo</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="../styles/liquid-glass.css" />
     <style>
-        :root {
-            --bg:   #09090b;
-            --card: #141419;
-            --text: #fcfcfd;
-            --muted:#8a8a98;
-            --font: 'Nunito', sans-serif;
-        }
-        *, *::before, *::after { box-sizing: border-box; }
-        body {
-            margin: 0;
-            background: var(--bg);
-            color: var(--text);
-            font-family: var(--font);
-            -webkit-font-smoothing: antialiased;
-            background-image: radial-gradient(circle at 50% 0%, #1a1a24, var(--bg) 70%);
-        }
+      :root {
+        --bg: #09090b;
+        --card: #141419;
+        --text: #fcfcfd;
+        --muted: #8a8a98;
+        --font: 'Nunito', sans-serif;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font);
+        -webkit-font-smoothing: antialiased;
+        background-image: radial-gradient(circle at 50% 0%, #1a1a24, var(--bg) 70%);
+      }
 
-        /* ── Header ─────────────────────────────────────── */
-        .page-header {
-            padding: 10vh 5vw 5vh;
-            text-align: center;
-            display: flex; flex-direction: column; align-items: center; gap: 1rem;
-        }
-        .badge {
-            display: inline-block; background: rgba(255,255,255,.06); color: var(--muted);
-            font-size: .8rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
-            padding: .4rem 1.2rem; border-radius: 100px; border: 1px solid rgba(255,255,255,.08);
-        }
-        .page-title {
-            font-size: clamp(3rem,10vw,7rem); font-weight: 900; letter-spacing: -.04em; margin: 0;
-            background: linear-gradient(180deg,#fff 0%,#66667a 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1;
-        }
-        .page-sub { color: var(--muted); font-size: 1.1rem; font-weight: 600; max-width: 520px; text-align: center; }
+      /* ── Header ─────────────────────────────────────── */
+      .page-header {
+        padding: 10vh 5vw 5vh;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+      .badge {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--muted);
+        font-size: 0.8rem;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 0.4rem 1.2rem;
+        border-radius: 100px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .page-title {
+        font-size: clamp(3rem, 10vw, 7rem);
+        font-weight: 900;
+        letter-spacing: -0.04em;
+        margin: 0;
+        background: linear-gradient(180deg, #fff 0%, #66667a 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        line-height: 1;
+      }
+      .page-sub {
+        color: var(--muted);
+        font-size: 1.1rem;
+        font-weight: 600;
+        max-width: 520px;
+        text-align: center;
+      }
 
-        /* ── Snippet row ─────────────────────────────────── */
-        .snippet-row {
-            display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center;
-            max-width: 900px; margin: 0 auto; padding: 0 5vw;
-        }
-        .snippet {
-            background: #0d0d10; border: 1px solid rgba(255,255,255,.08); border-radius: 16px;
-            padding: 1.2rem 1.5rem; font-family: 'Courier New', monospace; font-size: .78rem;
-            line-height: 1.7; flex: 1 1 300px; white-space: pre;
-        }
-        .snippet .cmt{color:#5c6370}.snippet .kw{color:#c678dd}.snippet .fn{color:#61afef}
-        .snippet .str{color:#98c379}.snippet .num{color:#d19a66}.snippet .prop{color:#e06c75}
+      /* ── Snippet row ─────────────────────────────────── */
+      .snippet-row {
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 5vw;
+      }
+      .snippet {
+        background: #0d0d10;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 1.2rem 1.5rem;
+        font-family: 'Courier New', monospace;
+        font-size: 0.78rem;
+        line-height: 1.7;
+        flex: 1 1 300px;
+        white-space: pre;
+      }
+      .snippet .cmt {
+        color: #5c6370;
+      }
+      .snippet .kw {
+        color: #c678dd;
+      }
+      .snippet .fn {
+        color: #61afef;
+      }
+      .snippet .str {
+        color: #98c379;
+      }
+      .snippet .num {
+        color: #d19a66;
+      }
+      .snippet .prop {
+        color: #e06c75;
+      }
 
-        /* ── Grid ────────────────────────────────────────── */
+      /* ── Grid ────────────────────────────────────────── */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 2rem;
+        padding: 4rem 4vw 8rem;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+      .exhibit {
+        background: var(--card);
+        border-radius: 40px;
+        padding: 2rem;
+        box-shadow:
+          0 20px 40px rgba(0, 0, 0, 0.4),
+          inset 0 1px 1px rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .span-12 {
+        grid-column: span 12;
+      }
+      .span-8 {
+        grid-column: span 8;
+      }
+      .span-6 {
+        grid-column: span 6;
+      }
+      .span-4 {
+        grid-column: span 4;
+      }
+      @media (max-width: 900px) {
+        .span-4,
+        .span-6,
+        .span-8 {
+          grid-column: span 12;
+        }
         .grid {
-            display: grid; grid-template-columns: repeat(12,1fr);
-            gap: 2rem; padding: 4rem 4vw 8rem; max-width: 1400px; margin: 0 auto;
+          gap: 1.5rem;
         }
-        .exhibit {
-            background: var(--card); border-radius: 40px; padding: 2rem;
-            box-shadow: 0 20px 40px rgba(0,0,0,.4), inset 0 1px 1px rgba(255,255,255,.07);
-            border: 1px solid rgba(255,255,255,.06);
-        }
-        .span-12{grid-column:span 12}.span-8{grid-column:span 8}
-        .span-6{grid-column:span 6}.span-4{grid-column:span 4}
-        @media(max-width:900px){.span-4,.span-6,.span-8{grid-column:span 12}.grid{gap:1.5rem}}
+      }
 
-        .exhibit-info { text-align: center; margin-bottom: 1.5rem; }
-        .exhibit-no   { display:inline-block; background:rgba(255,255,255,.05); color:var(--muted);
-                        padding:.3rem 1rem; border-radius:100px; font-size:.82rem; font-weight:800; margin-bottom:.4rem; }
-        .exhibit-title { font-size:1.6rem; font-weight:900; letter-spacing:-.02em; margin:0 0 .3rem; }
-        .exhibit-desc  { color:var(--muted); font-size:.95rem; margin:0; line-height:1.5; }
+      .exhibit-info {
+        text-align: center;
+        margin-bottom: 1.5rem;
+      }
+      .exhibit-no {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--muted);
+        padding: 0.3rem 1rem;
+        border-radius: 100px;
+        font-size: 0.82rem;
+        font-weight: 800;
+        margin-bottom: 0.4rem;
+      }
+      .exhibit-title {
+        font-size: 1.6rem;
+        font-weight: 900;
+        letter-spacing: -0.02em;
+        margin: 0 0 0.3rem;
+      }
+      .exhibit-desc {
+        color: var(--muted);
+        font-size: 0.95rem;
+        margin: 0;
+        line-height: 1.5;
+      }
 
-        /* ── Stage ───────────────────────────────────────── */
-        .stage {
-            position: relative; border-radius: 28px; overflow: hidden;
-            display: flex; align-items: center; justify-content: center;
-            height: 360px;
-            box-shadow: inset 0 0 0 1px rgba(255,255,255,.04), inset 0 10px 30px rgba(0,0,0,.5);
-        }
-        .orb { position:absolute; border-radius:50%; filter:blur(60px); opacity:.4; pointer-events:none; }
+      /* ── Stage ───────────────────────────────────────── */
+      .stage {
+        position: relative;
+        border-radius: 28px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 360px;
+        box-shadow:
+          inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+          inset 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+      .orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(60px);
+        opacity: 0.4;
+        pointer-events: none;
+      }
 
-        /* Stage backgrounds */
-        #s-lens    { background:radial-gradient(circle at 40% 50%,#1e1e28,#0a0a0e); height:460px; }
-        #s-button  { background:radial-gradient(circle at 50% 50%,#0c333a,#030d0e); }
-        #s-switch  { background:radial-gradient(circle at 50% 50%,#291238,#0d0514); }
-        #s-slider  { background:radial-gradient(circle at 50% 50%,#0d2746,#050b14); }
-        #s-generic { background:radial-gradient(circle at 30% 30%,#1a1030,#050508); flex-direction:column; gap:1.5rem; }
-        #s-init    { background:radial-gradient(circle at 50% 50%,#0f3020,#030d07); flex-wrap:wrap; gap:1.5rem; padding:2rem; }
-        #s-cursor  { background:#050508; cursor:none; }
-        #s-input   { background:radial-gradient(circle at 50% 50%,#38151b,#110507); }
-        #s-dial    { background:radial-gradient(circle at 50% 50%,#1a1a24,#07070a); }
-        #s-tooltip { background:radial-gradient(circle at 50% 50%,#1a2a3a,#050a14); }
-        #s-progress{ background:radial-gradient(circle at 50% 50%,#291a38,#0a040d); flex-direction:column; gap:1.2rem; padding:2rem; }
+      /* Stage backgrounds */
+      #s-lens {
+        background: radial-gradient(circle at 40% 50%, #1e1e28, #0a0a0e);
+        height: 460px;
+      }
+      #s-button {
+        background: radial-gradient(circle at 50% 50%, #0c333a, #030d0e);
+      }
+      #s-switch {
+        background: radial-gradient(circle at 50% 50%, #291238, #0d0514);
+      }
+      #s-slider {
+        background: radial-gradient(circle at 50% 50%, #0d2746, #050b14);
+      }
+      #s-generic {
+        background: radial-gradient(circle at 30% 30%, #1a1030, #050508);
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+      #s-init {
+        background: radial-gradient(circle at 50% 50%, #0f3020, #030d07);
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        padding: 2rem;
+      }
+      #s-cursor {
+        background: #050508;
+        cursor: none;
+      }
+      #s-input {
+        background: radial-gradient(circle at 50% 50%, #38151b, #110507);
+      }
+      #s-dial {
+        background: radial-gradient(circle at 50% 50%, #1a1a24, #07070a);
+      }
+      #s-tooltip {
+        background: radial-gradient(circle at 50% 50%, #1a2a3a, #050a14);
+      }
+      #s-progress {
+        background: radial-gradient(circle at 50% 50%, #291a38, #0a040d);
+        flex-direction: column;
+        gap: 1.2rem;
+        padding: 2rem;
+      }
 
-        /* Lens */
-        .lens-content { display:grid; grid-template-columns:1fr 1fr; gap:2rem; padding:2rem; width:100%; align-items:center; pointer-events:none; }
-        .lens-heading { font-size:clamp(1.8rem,4vw,3rem); font-weight:900; line-height:1; margin:0 0 .6rem; letter-spacing:-.03em; }
-        .lens-sub  { color:var(--muted); font-size:.95rem; margin:0; }
-        .lens-img  { border-radius:20px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,.5); }
-        .lens-img img { width:100%; height:100%; object-fit:cover; display:block; }
-        .lens-el { position:absolute; cursor:grab; touch-action:none; user-select:none;
-                   overflow:hidden; z-index:10; will-change:transform;
-                   left:40px; top:40px; width:200px; height:140px; border-radius:70px; }
-        .lens-el:active { cursor:grabbing; }
-        .lens-inner { position:absolute; inset:0; border-radius:inherit; z-index:3; pointer-events:none; will-change:box-shadow; }
+      /* Lens */
+      .lens-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        padding: 2rem;
+        width: 100%;
+        align-items: center;
+        pointer-events: none;
+      }
+      .lens-heading {
+        font-size: clamp(1.8rem, 4vw, 3rem);
+        font-weight: 900;
+        line-height: 1;
+        margin: 0 0 0.6rem;
+        letter-spacing: -0.03em;
+      }
+      .lens-sub {
+        color: var(--muted);
+        font-size: 0.95rem;
+        margin: 0;
+      }
+      .lens-img {
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+      .lens-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .lens-el {
+        position: absolute;
+        cursor: grab;
+        touch-action: none;
+        user-select: none;
+        overflow: hidden;
+        z-index: 10;
+        will-change: transform;
+        left: 40px;
+        top: 40px;
+        width: 200px;
+        height: 140px;
+        border-radius: 70px;
+      }
+      .lens-el:active {
+        cursor: grabbing;
+      }
+      .lens-inner {
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        z-index: 3;
+        pointer-events: none;
+        will-change: box-shadow;
+      }
 
-        /* Generic card */
-        .generic-card {
-            position:relative; padding:1.2rem 1.8rem; border-radius:24px;
-            font-weight:700; font-size:.95rem; min-width:200px;
-        }
-        .generic-card small { display:block; font-weight:400; color:var(--muted); font-size:.8rem; margin-top:.25rem; }
+      /* Generic card */
+      .generic-card {
+        position: relative;
+        padding: 1.2rem 1.8rem;
+        border-radius: 24px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        min-width: 200px;
+      }
+      .generic-card small {
+        display: block;
+        font-weight: 400;
+        color: var(--muted);
+        font-size: 0.8rem;
+        margin-top: 0.25rem;
+      }
 
-        /* Init cards */
-        .init-card { position:relative; padding:1.2rem 1.8rem; border-radius:20px; min-width:160px; font-weight:700; }
-        .init-card small { display:block; font-weight:400; color:var(--muted); font-size:.78rem; margin-top:.25rem; }
+      /* Init cards */
+      .init-card {
+        position: relative;
+        padding: 1.2rem 1.8rem;
+        border-radius: 20px;
+        min-width: 160px;
+        font-weight: 700;
+      }
+      .init-card small {
+        display: block;
+        font-weight: 400;
+        color: var(--muted);
+        font-size: 0.78rem;
+        margin-top: 0.25rem;
+      }
 
-        /* Event log */
-        .event-log {
-            margin-top:1.5rem; padding:.9rem 1.2rem; background:rgba(0,0,0,.3);
-            border-radius:12px; border:1px solid rgba(255,255,255,.06);
-            font-family:'Courier New',monospace; font-size:.78rem;
-            min-height:48px; max-height:80px; overflow-y:auto; color:#98c379;
-        }
-        .event-log .muted { color:var(--muted); }
+      /* Event log */
+      .event-log {
+        margin-top: 1.5rem;
+        padding: 0.9rem 1.2rem;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        font-family: 'Courier New', monospace;
+        font-size: 0.78rem;
+        min-height: 48px;
+        max-height: 80px;
+        overflow-y: auto;
+        color: #98c379;
+      }
+      .event-log .muted {
+        color: var(--muted);
+      }
 
-        /* Tooltip wrapper */
-        .tooltip-host {
-            position:relative; display:inline-flex; flex-direction:column;
-            align-items:center; justify-content:center;
-        }
-        .tooltip-trigger-btn {
-            font-family:inherit; font-size:1.1rem; font-weight:800; color:#fff;
-            cursor:pointer; background:none; border:none;
-            border-bottom:2px dashed rgba(255,255,255,.35); padding-bottom:4px;
-        }
+      /* Tooltip wrapper */
+      .tooltip-host {
+        position: relative;
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      .tooltip-trigger-btn {
+        font-family: inherit;
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: #fff;
+        cursor: pointer;
+        background: none;
+        border: none;
+        border-bottom: 2px dashed rgba(255, 255, 255, 0.35);
+        padding-bottom: 4px;
+      }
 
-        /* Progress controls */
-        .progress-controls { display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; }
-        .progress-ctrl-btn {
-            font-family:inherit; background:rgba(255,255,255,.08); color:#fff;
-            border:1px solid rgba(255,255,255,.15); border-radius:100px;
-            padding:.5rem 1.2rem; font-size:.85rem; font-weight:700; cursor:pointer;
-            transition:background .15s;
-        }
-        .progress-ctrl-btn:hover { background:rgba(255,255,255,.15); }
+      /* Progress controls */
+      .progress-controls {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .progress-ctrl-btn {
+        font-family: inherit;
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 100px;
+        padding: 0.5rem 1.2rem;
+        font-size: 0.85rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      .progress-ctrl-btn:hover {
+        background: rgba(255, 255, 255, 0.15);
+      }
 
-        /* Dial display */
-        .dial-display {
-            font-size: 1.4rem; font-weight: 900; color: #fff;
-            letter-spacing: -.02em; margin-top: .5rem;
-            font-variant-numeric: tabular-nums;
-        }
+      /* Dial display */
+      .dial-display {
+        font-size: 1.4rem;
+        font-weight: 900;
+        color: #fff;
+        letter-spacing: -0.02em;
+        margin-top: 0.5rem;
+        font-variant-numeric: tabular-nums;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
+    <!-- ══════════════════════════════════════════════ HEADER -->
+    <header class="page-header">
+      <span class="badge">@avenra/liquid-glass · v1.0.0</span>
+      <h1 class="page-title">Liquid Glass</h1>
+      <p class="page-sub">
+        Physics-based SVG displacement lens for the web. One import. Zero dependencies.
+      </p>
+    </header>
 
-<!-- ══════════════════════════════════════════════ HEADER -->
-<header class="page-header">
-    <span class="badge">@avenra/liquid-glass · v1.0.0</span>
-    <h1 class="page-title">Liquid Glass</h1>
-    <p class="page-sub">Physics-based SVG displacement lens for the web. One import. Zero dependencies.</p>
-</header>
+    <!-- ── Code snippets ──────────────────────────────────── -->
+    <div class="snippet-row">
+      <div class="snippet">
+        <span class="cmt">// npm</span> <span class="kw">import</span> { createLiquidButton }
+        <span class="kw">from</span> <span class="str">'@avenra/liquid-glass'</span>;
 
-<!-- ── Code snippets ──────────────────────────────────── -->
-<div class="snippet-row">
-    <div class="snippet"><span class="cmt">// npm</span>
-<span class="kw">import</span> { createLiquidButton } <span class="kw">from</span> <span class="str">'@avenra/liquid-glass'</span>;
+        <span class="kw">const</span> <span class="prop">btn</span> =
+        <span class="fn">createLiquidButton</span>(<span class="str">'#myBtn'</span>, { label:
+        <span class="str">'Save'</span> }); <span class="prop">btn</span>.<span class="fn">on</span
+        >(<span class="str">'click'</span>, (e) => <span class="fn">handleSave</span>(e));
+      </div>
+      <div class="snippet">
+        <span class="cmt">// CDN — UMD script tag</span> &lt;<span class="kw">script</span>
+        src=<span class="str">"cdn.../liquid-glass.umd.min.js"</span>&gt;&lt;/<span class="kw"
+          >script</span
+        >&gt; <span class="kw">const</span> { createLiquidSlider } =
+        <span class="prop">LiquidGlass</span>;
 
-<span class="kw">const</span> <span class="prop">btn</span> = <span class="fn">createLiquidButton</span>(<span class="str">'#myBtn'</span>, { label: <span class="str">'Save'</span> });
-<span class="prop">btn</span>.<span class="fn">on</span>(<span class="str">'click'</span>, (e) => <span class="fn">handleSave</span>(e));</div>
-    <div class="snippet"><span class="cmt">// CDN — UMD script tag</span>
-&lt;<span class="kw">script</span> src=<span class="str">"cdn.../liquid-glass.umd.min.js"</span>&gt;&lt;/<span class="kw">script</span>&gt;
-<span class="kw">const</span> { createLiquidSlider } = <span class="prop">LiquidGlass</span>;
+        <span class="fn">createLiquidSlider</span>(<span class="str">'#vol'</span>, { min:<span
+          class="num"
+          >0</span
+        >, max:<span class="num">100</span> }) .<span class="fn">on</span>(<span class="str"
+          >'input'</span
+        >, ({ value }) => <span class="fn">setVol</span>(value));
+      </div>
+      <div class="snippet">
+        <span class="cmt">// data-attribute zero-JS init</span> &lt;<span class="kw">button</span>
+        <span class="prop">data-liquid-button</span> <span class="prop">data-label</span>=<span
+          class="str"
+          >"Subscribe"</span
+        >&gt;&lt;/<span class="kw">button</span>&gt; &lt;<span class="kw">div</span>
+        <span class="prop">data-liquid-switch</span> <span class="prop">data-checked</span>=<span
+          class="str"
+          >"true"</span
+        >&gt;&lt;/<span class="kw">div</span>&gt; &lt;<span class="kw">div</span>
+        <span class="prop">data-liquid-progress</span> <span class="prop">data-value</span>=<span
+          class="str"
+          >"40"</span
+        >&gt;&lt;/<span class="kw">div</span>&gt;
 
-<span class="fn">createLiquidSlider</span>(<span class="str">'#vol'</span>, { min:<span class="num">0</span>, max:<span class="num">100</span> })
-  .<span class="fn">on</span>(<span class="str">'input'</span>, ({ value }) => <span class="fn">setVol</span>(value));</div>
-    <div class="snippet"><span class="cmt">// data-attribute zero-JS init</span>
-&lt;<span class="kw">button</span> <span class="prop">data-liquid-button</span> <span class="prop">data-label</span>=<span class="str">"Subscribe"</span>&gt;&lt;/<span class="kw">button</span>&gt;
-&lt;<span class="kw">div</span> <span class="prop">data-liquid-switch</span> <span class="prop">data-checked</span>=<span class="str">"true"</span>&gt;&lt;/<span class="kw">div</span>&gt;
-&lt;<span class="kw">div</span> <span class="prop">data-liquid-progress</span> <span class="prop">data-value</span>=<span class="str">"40"</span>&gt;&lt;/<span class="kw">div</span>&gt;
+        <span class="fn">init</span>(); <span class="cmt">// scans &amp; applies everything</span>
+      </div>
+    </div>
 
-<span class="fn">init</span>(); <span class="cmt">// scans &amp; applies everything</span></div>
-</div>
-
-<!-- ══════════════════════════════════════════════ GALLERY -->
-<main class="grid">
-
-    <!-- 01 ── Precision Lens -->
-    <article class="exhibit span-12">
+    <!-- ══════════════════════════════════════════════ GALLERY -->
+    <main class="grid">
+      <!-- 01 ── Precision Lens -->
+      <article class="exhibit span-12">
         <div class="exhibit-info">
-            <span class="exhibit-no">01</span>
-            <h2 class="exhibit-title">Precision Lens</h2>
-            <p class="exhibit-desc">Drag to bend the visual space — low-level API: <code>compute1D</code>, <code>createFilterSVG</code>, <code>Spring</code>.</p>
+          <span class="exhibit-no">01</span>
+          <h2 class="exhibit-title">Precision Lens</h2>
+          <p class="exhibit-desc">
+            Drag to bend the visual space — low-level API: <code>compute1D</code>,
+            <code>createFilterSVG</code>, <code>Spring</code>.
+          </p>
         </div>
         <div class="stage" id="s-lens">
-            <div class="lens-content" id="lensContent">
-                <div>
-                    <p style="opacity:.45;font-size:.75rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin:0 0 .6rem">Optics Study</p>
-                    <h3 class="lens-heading">Liquid<br>Glass</h3>
-                    <p class="lens-sub">Snell's law through a convex bezel.<br>Drag the capsule to explore.</p>
-                </div>
-                <div class="lens-img">
-                    <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=800&auto=format&fit=crop" draggable="false" />
-                </div>
+          <div class="lens-content" id="lensContent">
+            <div>
+              <p
+                style="
+                  opacity: 0.45;
+                  font-size: 0.75rem;
+                  font-weight: 800;
+                  letter-spacing: 0.12em;
+                  text-transform: uppercase;
+                  margin: 0 0 0.6rem;
+                "
+              >
+                Optics Study
+              </p>
+              <h3 class="lens-heading">Liquid<br />Glass</h3>
+              <p class="lens-sub">
+                Snell's law through a convex bezel.<br />Drag the capsule to explore.
+              </p>
             </div>
-            <div class="lens-el" id="lensEl">
-                <div class="lens-inner" id="lensInner"></div>
+            <div class="lens-img">
+              <img
+                src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=800&auto=format&fit=crop"
+                draggable="false"
+              />
             </div>
+          </div>
+          <div class="lens-el" id="lensEl">
+            <div class="lens-inner" id="lensInner"></div>
+          </div>
         </div>
-    </article>
+      </article>
 
-    <!-- 02 ── Button -->
-    <article class="exhibit span-4">
+      <!-- 02 ── Button -->
+      <article class="exhibit span-4">
         <div class="exhibit-info">
-            <span class="exhibit-no">02</span>
-            <h2 class="exhibit-title">Liquid Button</h2>
-            <p class="exhibit-desc">Hover &amp; press spring dynamics.</p>
+          <span class="exhibit-no">02</span>
+          <h2 class="exhibit-title">Liquid Button</h2>
+          <p class="exhibit-desc">Hover &amp; press spring dynamics.</p>
         </div>
         <div class="stage" id="s-button">
-            <div class="orb" style="background:#14b8a6;width:280px;height:280px;top:-60px;left:0"></div>
-            <div class="orb" style="background:#3b82f6;width:280px;height:280px;bottom:-60px;right:0"></div>
-            <button id="demoBtn"></button>
+          <div
+            class="orb"
+            style="background: #14b8a6; width: 280px; height: 280px; top: -60px; left: 0"
+          ></div>
+          <div
+            class="orb"
+            style="background: #3b82f6; width: 280px; height: 280px; bottom: -60px; right: 0"
+          ></div>
+          <button id="demoBtn"></button>
         </div>
         <div class="event-log" id="btnLog"><span class="muted">Events appear here…</span></div>
-    </article>
+      </article>
 
-    <!-- 03 ── Switch -->
-    <article class="exhibit span-4">
+      <!-- 03 ── Switch -->
+      <article class="exhibit span-4">
         <div class="exhibit-info">
-            <span class="exhibit-no">03</span>
-            <h2 class="exhibit-title">Tactile Switch</h2>
-            <p class="exhibit-desc">Drag or tap to toggle.</p>
+          <span class="exhibit-no">03</span>
+          <h2 class="exhibit-title">Tactile Switch</h2>
+          <p class="exhibit-desc">Drag or tap to toggle.</p>
         </div>
         <div class="stage" id="s-switch">
-            <div id="demoSwitch"></div>
+          <div id="demoSwitch"></div>
         </div>
         <div class="event-log" id="swLog"><span class="muted">Events appear here…</span></div>
-    </article>
+      </article>
 
-    <!-- 04 ── Slider -->
-    <article class="exhibit span-4">
+      <!-- 04 ── Slider -->
+      <article class="exhibit span-4">
         <div class="exhibit-info">
-            <span class="exhibit-no">04</span>
-            <h2 class="exhibit-title">Fluid Slider</h2>
-            <p class="exhibit-desc">Squishy pill reacts to drag velocity.</p>
+          <span class="exhibit-no">04</span>
+          <h2 class="exhibit-title">Fluid Slider</h2>
+          <p class="exhibit-desc">Squishy pill reacts to drag velocity.</p>
         </div>
         <div class="stage" id="s-slider">
-            <div id="demoSlider"></div>
+          <div id="demoSlider"></div>
         </div>
         <div class="event-log" id="slLog"><span class="muted">Events appear here…</span></div>
-    </article>
+      </article>
 
-    <!-- 05 ── Generic Glass -->
-    <article class="exhibit span-8">
+      <!-- 05 ── Generic Glass -->
+      <article class="exhibit span-8">
         <div class="exhibit-info">
-            <span class="exhibit-no">05</span>
-            <h2 class="exhibit-title">Generic Glass</h2>
-            <p class="exhibit-desc"><code>createLiquidGlass()</code> on any element — three bezel profiles.</p>
+          <span class="exhibit-no">05</span>
+          <h2 class="exhibit-title">Generic Glass</h2>
+          <p class="exhibit-desc">
+            <code>createLiquidGlass()</code> on any element — three bezel profiles.
+          </p>
         </div>
         <div class="stage" id="s-generic">
-            <div class="orb" style="background:#6366f1;width:300px;height:300px;top:-60px;right:20%"></div>
-            <div class="orb" style="background:#ec4899;width:200px;height:200px;bottom:-40px;left:10%"></div>
-            <div class="generic-card" id="card1">convexSquircle · ri 1.5<small>Default — smooth Apple-like bezel</small></div>
-            <div class="generic-card" id="card2">convexSquircle · ri 2.0<small>Higher refractive index — stronger bend</small></div>
-            <div class="generic-card" id="card3">convexCircle · ri 1.8<small>Spherical dome — sharper edge</small></div>
+          <div
+            class="orb"
+            style="background: #6366f1; width: 300px; height: 300px; top: -60px; right: 20%"
+          ></div>
+          <div
+            class="orb"
+            style="background: #ec4899; width: 200px; height: 200px; bottom: -40px; left: 10%"
+          ></div>
+          <div class="generic-card" id="card1">
+            convexSquircle · ri 1.5<small>Default — smooth Apple-like bezel</small>
+          </div>
+          <div class="generic-card" id="card2">
+            convexSquircle · ri 2.0<small>Higher refractive index — stronger bend</small>
+          </div>
+          <div class="generic-card" id="card3">
+            convexCircle · ri 1.8<small>Spherical dome — sharper edge</small>
+          </div>
         </div>
-    </article>
+      </article>
 
-    <!-- 06 ── Auto-Init -->
-    <article class="exhibit span-4">
+      <!-- 06 ── Auto-Init -->
+      <article class="exhibit span-4">
         <div class="exhibit-info">
-            <span class="exhibit-no">06</span>
-            <h2 class="exhibit-title">Auto-Init</h2>
-            <p class="exhibit-desc"><code>data-liquid-*</code> attributes + one <code>init()</code> call.</p>
+          <span class="exhibit-no">06</span>
+          <h2 class="exhibit-title">Auto-Init</h2>
+          <p class="exhibit-desc">
+            <code>data-liquid-*</code> attributes + one <code>init()</code> call.
+          </p>
         </div>
         <div class="stage" id="s-init">
-            <div class="orb" style="background:#10b981;width:200px;height:200px;top:-40px;left:10%"></div>
-            <div class="init-card" data-liquid-glass>
-                data-liquid-glass<small>No JS needed</small>
-            </div>
-            <button data-liquid-button data-label="Subscribe" class="init-card" style="border:none;background:none;cursor:pointer;"></button>
-            <div data-liquid-switch data-checked="false" class="init-card" style="min-height:80px;display:flex;align-items:center;"></div>
+          <div
+            class="orb"
+            style="background: #10b981; width: 200px; height: 200px; top: -40px; left: 10%"
+          ></div>
+          <div class="init-card" data-liquid-glass>
+            data-liquid-glass<small>No JS needed</small>
+          </div>
+          <button
+            data-liquid-button
+            data-label="Subscribe"
+            class="init-card"
+            style="border: none; background: none; cursor: pointer"
+          ></button>
+          <div
+            data-liquid-switch
+            data-checked="false"
+            class="init-card"
+            style="min-height: 80px; display: flex; align-items: center"
+          ></div>
         </div>
-    </article>
+      </article>
 
-    <!-- 07 ── Cursor -->
-    <article class="exhibit span-8">
+      <!-- 07 ── Cursor -->
+      <article class="exhibit span-8">
         <div class="exhibit-info">
-            <span class="exhibit-no">07</span>
-            <h2 class="exhibit-title">Cursor Optics</h2>
-            <p class="exhibit-desc">Glass orb replacing the system cursor — grows on hover, squishes on click.</p>
+          <span class="exhibit-no">07</span>
+          <h2 class="exhibit-title">Cursor Optics</h2>
+          <p class="exhibit-desc">
+            Glass orb replacing the system cursor — grows on hover, squishes on click.
+          </p>
         </div>
         <div class="stage" id="s-cursor">
-            <div class="orb" style="background:#6366f1;width:300px;height:300px;top:-60px;left:10%"></div>
-            <div class="orb" style="background:#ec4899;width:200px;height:200px;bottom:-40px;right:15%"></div>
-            <div style="text-align:center;pointer-events:none;z-index:1;">
-                <h3 style="font-size:clamp(2rem,6vw,4rem);font-weight:900;margin:0 0 .5rem;letter-spacing:-.03em;">Liquid Space</h3>
-                <p style="color:var(--muted);margin:0">Move your mouse over this area</p>
-            </div>
-            <button id="cursorHoverBtn" style="position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);font-family:inherit;font-weight:800;border-radius:100px;background:rgba(255,255,255,.1);color:#fff;padding:.8rem 2rem;border:none;cursor:none;">Hover Me</button>
+          <div
+            class="orb"
+            style="background: #6366f1; width: 300px; height: 300px; top: -60px; left: 10%"
+          ></div>
+          <div
+            class="orb"
+            style="background: #ec4899; width: 200px; height: 200px; bottom: -40px; right: 15%"
+          ></div>
+          <div style="text-align: center; pointer-events: none; z-index: 1">
+            <h3
+              style="
+                font-size: clamp(2rem, 6vw, 4rem);
+                font-weight: 900;
+                margin: 0 0 0.5rem;
+                letter-spacing: -0.03em;
+              "
+            >
+              Liquid Space
+            </h3>
+            <p style="color: var(--muted); margin: 0">Move your mouse over this area</p>
+          </div>
+          <button
+            id="cursorHoverBtn"
+            style="
+              position: absolute;
+              bottom: 2rem;
+              left: 50%;
+              transform: translateX(-50%);
+              font-family: inherit;
+              font-weight: 800;
+              border-radius: 100px;
+              background: rgba(255, 255, 255, 0.1);
+              color: #fff;
+              padding: 0.8rem 2rem;
+              border: none;
+              cursor: none;
+            "
+          >
+            Hover Me
+          </button>
         </div>
-    </article>
+      </article>
 
-    <!-- 08 ── Input -->
-    <article class="exhibit span-4">
+      <!-- 08 ── Input -->
+      <article class="exhibit span-4">
         <div class="exhibit-info">
-            <span class="exhibit-no">08</span>
-            <h2 class="exhibit-title">Fluid Input</h2>
-            <p class="exhibit-desc">Micro-vibration on typing, scale spring on focus.</p>
+          <span class="exhibit-no">08</span>
+          <h2 class="exhibit-title">Fluid Input</h2>
+          <p class="exhibit-desc">Micro-vibration on typing, scale spring on focus.</p>
         </div>
         <div class="stage" id="s-input">
-            <div class="orb" style="background:#f43f5e;width:220px;height:220px;top:-40px;left:5%"></div>
-            <div class="orb" style="background:#8b5cf6;width:180px;height:180px;bottom:-30px;right:5%"></div>
-            <div id="demoInput"></div>
+          <div
+            class="orb"
+            style="background: #f43f5e; width: 220px; height: 220px; top: -40px; left: 5%"
+          ></div>
+          <div
+            class="orb"
+            style="background: #8b5cf6; width: 180px; height: 180px; bottom: -30px; right: 5%"
+          ></div>
+          <div id="demoInput"></div>
         </div>
         <div class="event-log" id="inputLog"><span class="muted">Type to see events…</span></div>
-    </article>
+      </article>
 
-    <!-- 09 ── Dial -->
-    <article class="exhibit span-4">
+      <!-- 09 ── Dial -->
+      <article class="exhibit span-4">
         <div class="exhibit-info">
-            <span class="exhibit-no">09</span>
-            <h2 class="exhibit-title">Rotation Dial</h2>
-            <p class="exhibit-desc">Drag to spin continuously.</p>
+          <span class="exhibit-no">09</span>
+          <h2 class="exhibit-title">Rotation Dial</h2>
+          <p class="exhibit-desc">Drag to spin continuously.</p>
         </div>
-        <div class="stage" id="s-dial" style="flex-direction:column;gap:.5rem;">
-            <div id="demoDial"></div>
-            <div class="dial-display" id="dialDisplay">0°</div>
+        <div class="stage" id="s-dial" style="flex-direction: column; gap: 0.5rem">
+          <div id="demoDial"></div>
+          <div class="dial-display" id="dialDisplay">0°</div>
         </div>
-    </article>
+      </article>
 
-    <!-- 10 ── Tooltip -->
-    <article class="exhibit span-4">
+      <!-- 10 ── Tooltip -->
+      <article class="exhibit span-4">
         <div class="exhibit-info">
-            <span class="exhibit-no">10</span>
-            <h2 class="exhibit-title">Glass Tooltip</h2>
-            <p class="exhibit-desc">Spring-animated glass pill above a trigger.</p>
+          <span class="exhibit-no">10</span>
+          <h2 class="exhibit-title">Glass Tooltip</h2>
+          <p class="exhibit-desc">Spring-animated glass pill above a trigger.</p>
         </div>
         <div class="stage" id="s-tooltip">
-            <div class="orb" style="background:#3b82f6;width:250px;height:250px;top:-40px;left:30%"></div>
-            <div class="tooltip-host" id="tooltipHost">
-                <button class="tooltip-trigger-btn" id="tooltipTrigger">Hover for info</button>
-                <div id="demoTooltip" style="width:160px;height:46px;border-radius:23px;"></div>
-            </div>
+          <div
+            class="orb"
+            style="background: #3b82f6; width: 250px; height: 250px; top: -40px; left: 30%"
+          ></div>
+          <div class="tooltip-host" id="tooltipHost">
+            <button class="tooltip-trigger-btn" id="tooltipTrigger">Hover for info</button>
+            <div id="demoTooltip" style="width: 160px; height: 46px; border-radius: 23px"></div>
+          </div>
         </div>
         <div class="event-log" id="tipLog"><span class="muted">Hover to see events…</span></div>
-    </article>
+      </article>
 
-    <!-- 11 ── Progress -->
-    <article class="exhibit span-4">
+      <!-- 11 ── Progress -->
+      <article class="exhibit span-4">
         <div class="exhibit-info">
-            <span class="exhibit-no">11</span>
-            <h2 class="exhibit-title">Fluid Progress</h2>
-            <p class="exhibit-desc">Squish spring on value update.</p>
+          <span class="exhibit-no">11</span>
+          <h2 class="exhibit-title">Fluid Progress</h2>
+          <p class="exhibit-desc">Squish spring on value update.</p>
         </div>
         <div class="stage" id="s-progress">
-            <div class="orb" style="background:#d946ef;width:280px;height:280px;bottom:-60px;right:-20px"></div>
-            <div id="demoProgress" style="width:280px;"></div>
-            <div class="progress-controls">
-                <button class="progress-ctrl-btn" id="progDec">−25%</button>
-                <button class="progress-ctrl-btn" id="progInc">+25%</button>
-                <button class="progress-ctrl-btn" id="progRnd">Random</button>
-            </div>
+          <div
+            class="orb"
+            style="background: #d946ef; width: 280px; height: 280px; bottom: -60px; right: -20px"
+          ></div>
+          <div id="demoProgress" style="width: 280px"></div>
+          <div class="progress-controls">
+            <button class="progress-ctrl-btn" id="progDec">−25%</button>
+            <button class="progress-ctrl-btn" id="progInc">+25%</button>
+            <button class="progress-ctrl-btn" id="progRnd">Random</button>
+          </div>
         </div>
-        <div class="event-log" id="progLog"><span class="muted">Click buttons to update…</span></div>
-    </article>
+        <div class="event-log" id="progLog">
+          <span class="muted">Click buttons to update…</span>
+        </div>
+      </article>
+    </main>
 
-</main>
-
-<!-- ══════════════════════════════════════════════ SCRIPTS -->
-<script>
-    let useBackdropFilter = false;
-    (function () {
+    <!-- ══════════════════════════════════════════════ SCRIPTS -->
+    <script>
+      let useBackdropFilter = false;
+      (function () {
         const t = document.createElement('div');
         t.style.backdropFilter = 'url(#test)';
         useBackdropFilter = !!window.chrome && t.style.backdropFilter.includes('url');
         if (useBackdropFilter) document.body.classList.add('use-backdrop-filter');
-    })();
-</script>
+      })();
+    </script>
 
-<script type="module">
-import {
-    createLiquidGlass,
-    createLiquidButton,
-    createLiquidSwitch,
-    createLiquidSlider,
-    createLiquidCursor,
-    createLiquidInput,
-    createLiquidDial,
-    createLiquidTooltip,
-    createLiquidProgress,
-    init,
-    Spring,
-    compute1D, compute2D, computeSpecular, imageDataToURL, PROFILES,
-    createFilterSVG, injectImages, setScale, nextFilterId,
-} from '../dist/liquid-glass.esm.js';
+    <script type="module">
+      import {
+        createLiquidGlass,
+        createLiquidButton,
+        createLiquidSwitch,
+        createLiquidSlider,
+        createLiquidCursor,
+        createLiquidInput,
+        createLiquidDial,
+        createLiquidTooltip,
+        createLiquidProgress,
+        init,
+        Spring,
+        compute1D,
+        compute2D,
+        computeSpecular,
+        imageDataToURL,
+        PROFILES,
+        createFilterSVG,
+        injectImages,
+        setScale,
+        nextFilterId,
+      } from '../dist/liquid-glass.esm.js';
 
-function log(el, msg) {
-    el.innerHTML = '';
-    const s = document.createElement('span');
-    s.textContent = msg;
-    el.appendChild(s);
-}
+      function log(el, msg) {
+        el.innerHTML = '';
+        const s = document.createElement('span');
+        s.textContent = msg;
+        el.appendChild(s);
+      }
 
-// ── 01  Precision Lens ────────────────────────────────────────────────────────
-(function initLens() {
-    const W=200, H=140, R=70, BW=30, GT=150, RI=1.5;
-    const map1D = compute1D(GT, BW, PROFILES.convexSquircle, RI);
-    const md    = Math.max(...map1D.map(Math.abs));
-    const filterId = nextFilterId('lens');
-    const { svg, refs } = createFilterSVG({ filterId, width:W, height:H, blur:0.5, scale:md, saturation:1.3, specularSlope:1.0 });
-    injectImages(refs, imageDataToURL(compute2D(W,H,R,BW,md||1,map1D)), imageDataToURL(computeSpecular(W,H,R,BW)));
+      // ── 01  Precision Lens ────────────────────────────────────────────────────────
+      (function initLens() {
+        const W = 200,
+          H = 140,
+          R = 70,
+          BW = 30,
+          GT = 150,
+          RI = 1.5;
+        const map1D = compute1D(GT, BW, PROFILES.convexSquircle, RI);
+        const md = Math.max(...map1D.map(Math.abs));
+        const filterId = nextFilterId('lens');
+        const { svg, refs } = createFilterSVG({
+          filterId,
+          width: W,
+          height: H,
+          blur: 0.5,
+          scale: md,
+          saturation: 1.3,
+          specularSlope: 1.0,
+        });
+        injectImages(
+          refs,
+          imageDataToURL(compute2D(W, H, R, BW, md || 1, map1D)),
+          imageDataToURL(computeSpecular(W, H, R, BW)),
+        );
 
-    const lensEl=document.getElementById('lensEl'), inner=document.getElementById('lensInner'), stage=document.getElementById('s-lens');
-    lensEl.appendChild(svg);
-    if (useBackdropFilter) { inner.style.backdropFilter = `url("#${filterId}")`; inner.style.webkitBackdropFilter = `url("#${filterId}")`; }
+        const lensEl = document.getElementById('lensEl'),
+          inner = document.getElementById('lensInner'),
+          stage = document.getElementById('s-lens');
+        lensEl.appendChild(svg);
+        if (useBackdropFilter) {
+          inner.style.backdropFilter = `url("#${filterId}")`;
+          inner.style.webkitBackdropFilter = `url("#${filterId}")`;
+        }
 
-    const sp={scale:new Spring(0.85,400,25),scaleX:new Spring(1,400,30),scaleY:new Spring(1,400,30),rb:new Spring(0.8,300,18)};
-    let drag=false,vx=0,vy=0,lx=0,ly=0,lt=0,doff={x:0,y:0},af=null;
+        const sp = {
+          scale: new Spring(0.85, 400, 25),
+          scaleX: new Spring(1, 400, 30),
+          scaleY: new Spring(1, 400, 30),
+          rb: new Spring(0.8, 300, 18),
+        };
+        let drag = false,
+          vx = 0,
+          vy = 0,
+          lx = 0,
+          ly = 0,
+          lt = 0,
+          doff = { x: 0, y: 0 },
+          af = null;
 
-    function loop() {
-        sp.scale.setTarget(drag?1:.85); sp.rb.setTarget(drag?1:.8);
-        const vM=Math.sqrt(vx*vx+vy*vy), sq=Math.min(.15,vM/3000);
-        sp.scaleX.setTarget(vM>50?1+sq*Math.abs(vx/vM)-sq*.5*Math.abs(vy/vM):1);
-        sp.scaleY.setTarget(vM>50?1+sq*Math.abs(vy/vM)-sq*.5*Math.abs(vx/vM):1);
-        const sc=sp.scale.update(1/60),sx=sp.scaleX.update(1/60),sy=sp.scaleY.update(1/60),rb=sp.rb.update(1/60);
-        lensEl.style.transform=`scale(${sc*sx},${sc*sy})`;
-        setScale(refs, md*rb);
-        const oy=drag?16:4,b=drag?24:12,a=drag?.22:.15;
-        inner.style.boxShadow=`4px ${oy}px ${b}px rgba(0,0,0,${a}),inset 0 ${oy*.4}px 16px rgba(0,0,0,${a*.6}),inset 0 ${-oy*.4}px 16px rgba(255,255,255,${a*.48})`;
-        if(!drag){vx*=.95;vy*=.95;}
-        af=Object.values(sp).every(s=>s.isSettled())&&Math.abs(vx)<1&&Math.abs(vy)<1?null:requestAnimationFrame(loop);
-    }
-    lensEl.addEventListener('pointerdown',e=>{
-        e.preventDefault(); drag=true; lensEl.setPointerCapture(e.pointerId);
-        const r=lensEl.getBoundingClientRect(),cs=sp.scale.value;
-        doff={x:(e.clientX-r.left)/cs,y:(e.clientY-r.top)/cs};
-        lx=e.clientX;ly=e.clientY;lt=performance.now();vx=vy=0;
-        if(!af)af=requestAnimationFrame(loop);
-    });
-    lensEl.addEventListener('pointermove',e=>{
-        if(!drag)return;
-        const dt=Math.max(1,performance.now()-lt)/1000;
-        vx=(e.clientX-lx)/dt;vy=(e.clientY-ly)/dt;lx=e.clientX;ly=e.clientY;lt=performance.now();
-        const aR=stage.getBoundingClientRect();
-        let nx=e.clientX-aR.left-doff.x,ny=e.clientY-aR.top-doff.y;
-        nx=nx<0?nx*.3:nx>aR.width-W?aR.width-W+(nx-(aR.width-W))*.3:nx;
-        ny=ny<0?ny*.3:ny>aR.height-H?aR.height-H+(ny-(aR.height-H))*.3:ny;
-        lensEl.style.left=nx+'px';lensEl.style.top=ny+'px';
-    });
-    lensEl.addEventListener('pointerup',()=>{drag=false;if(!af)af=requestAnimationFrame(loop);});
-    af=requestAnimationFrame(loop);
-})();
+        function loop() {
+          sp.scale.setTarget(drag ? 1 : 0.85);
+          sp.rb.setTarget(drag ? 1 : 0.8);
+          const vM = Math.sqrt(vx * vx + vy * vy),
+            sq = Math.min(0.15, vM / 3000);
+          sp.scaleX.setTarget(
+            vM > 50 ? 1 + sq * Math.abs(vx / vM) - sq * 0.5 * Math.abs(vy / vM) : 1,
+          );
+          sp.scaleY.setTarget(
+            vM > 50 ? 1 + sq * Math.abs(vy / vM) - sq * 0.5 * Math.abs(vx / vM) : 1,
+          );
+          const sc = sp.scale.update(1 / 60),
+            sx = sp.scaleX.update(1 / 60),
+            sy = sp.scaleY.update(1 / 60),
+            rb = sp.rb.update(1 / 60);
+          lensEl.style.transform = `scale(${sc * sx},${sc * sy})`;
+          setScale(refs, md * rb);
+          const oy = drag ? 16 : 4,
+            b = drag ? 24 : 12,
+            a = drag ? 0.22 : 0.15;
+          inner.style.boxShadow = `4px ${oy}px ${b}px rgba(0,0,0,${a}),inset 0 ${oy * 0.4}px 16px rgba(0,0,0,${a * 0.6}),inset 0 ${-oy * 0.4}px 16px rgba(255,255,255,${a * 0.48})`;
+          if (!drag) {
+            vx *= 0.95;
+            vy *= 0.95;
+          }
+          af =
+            Object.values(sp).every((s) => s.isSettled()) && Math.abs(vx) < 1 && Math.abs(vy) < 1
+              ? null
+              : requestAnimationFrame(loop);
+        }
+        lensEl.addEventListener('pointerdown', (e) => {
+          e.preventDefault();
+          drag = true;
+          lensEl.setPointerCapture(e.pointerId);
+          const r = lensEl.getBoundingClientRect(),
+            cs = sp.scale.value;
+          doff = { x: (e.clientX - r.left) / cs, y: (e.clientY - r.top) / cs };
+          lx = e.clientX;
+          ly = e.clientY;
+          lt = performance.now();
+          vx = vy = 0;
+          if (!af) af = requestAnimationFrame(loop);
+        });
+        lensEl.addEventListener('pointermove', (e) => {
+          if (!drag) return;
+          const dt = Math.max(1, performance.now() - lt) / 1000;
+          vx = (e.clientX - lx) / dt;
+          vy = (e.clientY - ly) / dt;
+          lx = e.clientX;
+          ly = e.clientY;
+          lt = performance.now();
+          const aR = stage.getBoundingClientRect();
+          let nx = e.clientX - aR.left - doff.x,
+            ny = e.clientY - aR.top - doff.y;
+          nx =
+            nx < 0 ? nx * 0.3 : nx > aR.width - W ? aR.width - W + (nx - (aR.width - W)) * 0.3 : nx;
+          ny =
+            ny < 0
+              ? ny * 0.3
+              : ny > aR.height - H
+                ? aR.height - H + (ny - (aR.height - H)) * 0.3
+                : ny;
+          lensEl.style.left = nx + 'px';
+          lensEl.style.top = ny + 'px';
+        });
+        lensEl.addEventListener('pointerup', () => {
+          drag = false;
+          if (!af) af = requestAnimationFrame(loop);
+        });
+        af = requestAnimationFrame(loop);
+      })();
 
-// ── 02  Button ────────────────────────────────────────────────────────────────
-const btnLog = document.getElementById('btnLog');
-createLiquidButton('#demoBtn', { label: 'Tap Area' })
-  .on('click',      ()  => log(btnLog, `click — ${new Date().toLocaleTimeString()}`))
-  .on('mouseenter', ()  => log(btnLog, 'mouseenter'))
-  .on('mouseleave', ()  => log(btnLog, 'mouseleave'))
-  .on('mousedown',  ()  => log(btnLog, 'mousedown'))
-  .on('mouseup',    ()  => log(btnLog, 'mouseup'));
+      // ── 02  Button ────────────────────────────────────────────────────────────────
+      const btnLog = document.getElementById('btnLog');
+      createLiquidButton('#demoBtn', { label: 'Tap Area' })
+        .on('click', () => log(btnLog, `click — ${new Date().toLocaleTimeString()}`))
+        .on('mouseenter', () => log(btnLog, 'mouseenter'))
+        .on('mouseleave', () => log(btnLog, 'mouseleave'))
+        .on('mousedown', () => log(btnLog, 'mousedown'))
+        .on('mouseup', () => log(btnLog, 'mouseup'));
 
-// ── 03  Switch ────────────────────────────────────────────────────────────────
-const swLog = document.getElementById('swLog');
-createLiquidSwitch('#demoSwitch', { checked: true })
-  .on('change', ({ checked }) => log(swLog, `change → ${checked}`));
+      // ── 03  Switch ────────────────────────────────────────────────────────────────
+      const swLog = document.getElementById('swLog');
+      createLiquidSwitch('#demoSwitch', { checked: true }).on('change', ({ checked }) =>
+        log(swLog, `change → ${checked}`),
+      );
 
-// ── 04  Slider ────────────────────────────────────────────────────────────────
-const slLog = document.getElementById('slLog');
-const sl = createLiquidSlider('#demoSlider', { min: 0, max: 100, value: 30 });
-sl.on('input',  ({ value }) => log(slLog,  `input  → ${Math.round(value)}`))
-  .on('change', ({ value }) => log(slLog,  `change → ${Math.round(value)} (released)`));
-setTimeout(() => { sl.value = 60; }, 1000);
+      // ── 04  Slider ────────────────────────────────────────────────────────────────
+      const slLog = document.getElementById('slLog');
+      const sl = createLiquidSlider('#demoSlider', { min: 0, max: 100, value: 30 });
+      sl.on('input', ({ value }) => log(slLog, `input  → ${Math.round(value)}`)).on(
+        'change',
+        ({ value }) => log(slLog, `change → ${Math.round(value)} (released)`),
+      );
+      setTimeout(() => {
+        sl.value = 60;
+      }, 1000);
 
-// ── 05  Generic Glass ─────────────────────────────────────────────────────────
-createLiquidGlass('#card1', { bezelWidth:20, glassThickness:80,  refractiveIndex:1.5 });
-createLiquidGlass('#card2', { bezelWidth:24, glassThickness:120, refractiveIndex:2.0 });
-createLiquidGlass('#card3', { bezelWidth:20, glassThickness:100, refractiveIndex:1.8, profile:'convexCircle' });
+      // ── 05  Generic Glass ─────────────────────────────────────────────────────────
+      createLiquidGlass('#card1', { bezelWidth: 20, glassThickness: 80, refractiveIndex: 1.5 });
+      createLiquidGlass('#card2', { bezelWidth: 24, glassThickness: 120, refractiveIndex: 2.0 });
+      createLiquidGlass('#card3', {
+        bezelWidth: 20,
+        glassThickness: 100,
+        refractiveIndex: 1.8,
+        profile: 'convexCircle',
+      });
 
-// ── 06  Auto-Init ─────────────────────────────────────────────────────────────
-init();
+      // ── 06  Auto-Init ─────────────────────────────────────────────────────────────
+      init();
 
-// ── 07  Cursor ────────────────────────────────────────────────────────────────
-createLiquidCursor('#s-cursor', { size: 90 });
+      // ── 07  Cursor ────────────────────────────────────────────────────────────────
+      createLiquidCursor('#s-cursor', { size: 90 });
 
-// ── 08  Input ─────────────────────────────────────────────────────────────────
-const inputLog = document.getElementById('inputLog');
-createLiquidInput('#demoInput', { placeholder: 'Type something…' })
-  .on('focus', ()        => log(inputLog, 'focus'))
-  .on('blur',  ()        => log(inputLog, 'blur'))
-  .on('input', ({ value }) => log(inputLog, `input → "${value}"`));
+      // ── 08  Input ─────────────────────────────────────────────────────────────────
+      const inputLog = document.getElementById('inputLog');
+      createLiquidInput('#demoInput', { placeholder: 'Type something…' })
+        .on('focus', () => log(inputLog, 'focus'))
+        .on('blur', () => log(inputLog, 'blur'))
+        .on('input', ({ value }) => log(inputLog, `input → "${value}"`));
 
-// ── 09  Dial ─────────────────────────────────────────────────────────────────
-const dialDisplay = document.getElementById('dialDisplay');
-createLiquidDial('#demoDial', { value: 0 })
-  .on('change', ({ angle }) => { dialDisplay.textContent = `${Math.round(angle)}°`; });
+      // ── 09  Dial ─────────────────────────────────────────────────────────────────
+      const dialDisplay = document.getElementById('dialDisplay');
+      createLiquidDial('#demoDial', { value: 0 }).on('change', ({ angle }) => {
+        dialDisplay.textContent = `${Math.round(angle)}°`;
+      });
 
-// ── 10  Tooltip ───────────────────────────────────────────────────────────────
-const tipLog = document.getElementById('tipLog');
-createLiquidTooltip('#demoTooltip', { trigger: '#tooltipTrigger', text: 'Physics-based glass' })
-  .on('show', () => log(tipLog, 'show'))
-  .on('hide', () => log(tipLog, 'hide'));
+      // ── 10  Tooltip ───────────────────────────────────────────────────────────────
+      const tipLog = document.getElementById('tipLog');
+      createLiquidTooltip('#demoTooltip', {
+        trigger: '#tooltipTrigger',
+        text: 'Physics-based glass',
+      })
+        .on('show', () => log(tipLog, 'show'))
+        .on('hide', () => log(tipLog, 'hide'));
 
-// ── 11  Progress ──────────────────────────────────────────────────────────────
-const progLog = document.getElementById('progLog');
-const bar = createLiquidProgress('#demoProgress', { value: 40 });
-bar.on('change', ({ value }) => log(progLog, `change → ${Math.round(value)}%`));
+      // ── 11  Progress ──────────────────────────────────────────────────────────────
+      const progLog = document.getElementById('progLog');
+      const bar = createLiquidProgress('#demoProgress', { value: 40 });
+      bar.on('change', ({ value }) => log(progLog, `change → ${Math.round(value)}%`));
 
-document.getElementById('progDec').addEventListener('click', () => { bar.value = Math.max(0,   bar.value - 25); });
-document.getElementById('progInc').addEventListener('click', () => { bar.value = Math.min(100, bar.value + 25); });
-document.getElementById('progRnd').addEventListener('click', () => { bar.value = Math.floor(Math.random() * 101); });
-</script>
-</body>
+      document.getElementById('progDec').addEventListener('click', () => {
+        bar.value = Math.max(0, bar.value - 25);
+      });
+      document.getElementById('progInc').addEventListener('click', () => {
+        bar.value = Math.min(100, bar.value + 25);
+      });
+      document.getElementById('progRnd').addEventListener('click', () => {
+        bar.value = Math.floor(Math.random() * 101);
+      });
+    </script>
+  </body>
 </html>

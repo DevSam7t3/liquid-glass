@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2026-06-04
 
 ### Added
+
 - Physics-based liquid glass refraction via Snell's law SVG displacement maps
 - `createLiquidGlass()` — apply the glass effect to any selector or element
 - `createLiquidButton()` — spring-animated hover/press button with `.on('click')` events
@@ -30,5 +31,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Spring physics engine (`Spring` class) exposed as a low-level export
 - Full low-level API: `compute1D`, `compute2D`, `computeSpecular`, `buildMaps`, `createFilterSVG`, `setScale`
 
-[unreleased]: https://github.com/DevSam7t3/liquid-lens/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/DevSam7t3/liquid-lens/releases/tag/v1.0.0
+[unreleased]: https://github.com/DevSam7t3/liquid-glass/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/DevSam7t3/liquid-glass/releases/tag/v1.0.0

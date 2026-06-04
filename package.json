@@ -1,74 +1,96 @@
 {
-    "name": "@avenra/liquid-glass",
-    "version": "1.0.0",
-    "description": "Physics-based liquid glass UI effect — Snell's law SVG displacement maps, spring animations, zero runtime dependencies.",
-    "main":     "dist/liquid-glass.cjs.js",
-    "module":   "dist/liquid-glass.esm.js",
-    "browser":  "dist/liquid-glass.umd.js",
-    "types":    "dist/types/index.d.ts",
-    "unpkg":    "dist/liquid-glass.umd.min.js",
-    "jsdelivr": "dist/liquid-glass.umd.min.js",
-    "exports": {
-        ".": {
-            "import":  "./dist/liquid-glass.esm.js",
-            "require": "./dist/liquid-glass.cjs.js",
-            "browser": "./dist/liquid-glass.umd.js",
-            "types":   "./dist/types/index.d.ts"
-        },
-        "./styles": "./styles/liquid-glass.css"
+  "name": "@avenra/liquid-glass",
+  "version": "1.0.0",
+  "description": "Physics-based liquid glass UI effect — Snell's law SVG displacement maps, spring animations, zero runtime dependencies.",
+  "main": "dist/liquid-glass.cjs.js",
+  "module": "dist/liquid-glass.esm.js",
+  "browser": "dist/liquid-glass.umd.js",
+  "types": "dist/types/index.d.ts",
+  "unpkg": "dist/liquid-glass.umd.min.js",
+  "jsdelivr": "dist/liquid-glass.umd.min.js",
+  "exports": {
+    ".": {
+      "import": "./dist/liquid-glass.esm.js",
+      "require": "./dist/liquid-glass.cjs.js",
+      "browser": "./dist/liquid-glass.umd.js",
+      "types": "./dist/types/index.d.ts"
     },
-    "files": [
-        "dist",
-        "styles"
+    "./styles": "./styles/liquid-glass.css"
+  },
+  "files": [
+    "dist",
+    "styles"
+  ],
+  "sideEffects": [
+    "styles/*.css"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "build:watch": "rollup -c -w",
+    "test": "npm run build && node ./tests/run-tests.cjs",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "prepublishOnly": "npm run typecheck && npm run lint && npm test",
+    "prepare": "husky"
+  },
+  "keywords": [
+    "liquid-glass",
+    "svg-filter",
+    "backdrop-filter",
+    "displacement-map",
+    "snells-law",
+    "refraction",
+    "spring-animation",
+    "ui-component",
+    "typescript",
+    "css",
+    "animation",
+    "glass-effect",
+    "web-component"
+  ],
+  "author": "DevSam7t3",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DevSam7t3/liquid-glass"
+  },
+  "homepage": "https://docs.avenra.online/docs/liquid-glass/getting-started",
+  "bugs": {
+    "url": "https://github.com/DevSam7t3/liquid-glass/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix",
+      "prettier --write"
     ],
-    "sideEffects": [
-        "styles/*.css"
-    ],
-    "scripts": {
-        "build":       "rollup -c",
-        "build:watch": "rollup -c -w",
-        "test":        "npm run build && node ./tests/run-tests.cjs",
-        "typecheck":   "tsc --noEmit",
-        "prepublishOnly": "npm run typecheck && npm test"
-    },
-    "keywords": [
-        "liquid-glass",
-        "svg-filter",
-        "backdrop-filter",
-        "displacement-map",
-        "snells-law",
-        "refraction",
-        "spring-animation",
-        "ui-component",
-        "typescript",
-        "css",
-        "animation",
-        "glass-effect",
-        "web-component"
-    ],
-    "author": "DevSam7t3 <https://github.com/DevSam7t3>",
-    "license": "MIT",
-    "repository": {
-        "type": "git",
-        "url":  "https://github.com/DevSam7t3/liquid-lens.git"
-    },
-    "homepage": "https://github.com/DevSam7t3/liquid-lens#readme",
-    "bugs": {
-        "url": "https://github.com/DevSam7t3/liquid-lens/issues"
-    },
-    "engines": {
-        "node": ">=18.0.0"
-    },
-    "publishConfig": {
-        "access": "public"
-    },
-    "devDependencies": {
-        "@rollup/plugin-commonjs":     "^21.0.2",
-        "@rollup/plugin-node-resolve": "^13.0.6",
-        "rollup":                      "^2.79.1",
-        "rollup-plugin-terser":        "^7.0.2",
-        "rollup-plugin-typescript2":   "^0.37.0",
-        "tslib":                       "^2.8.1",
-        "typescript":                  "^5.9.3"
-    }
+    "*.{js,css,md,json}": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@rollup/plugin-commonjs": "^21.0.2",
+    "@rollup/plugin-node-resolve": "^13.0.6",
+    "@typescript-eslint/eslint-plugin": "^8.60.1",
+    "@typescript-eslint/parser": "^8.60.1",
+    "eslint": "^10.4.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.6",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.7",
+    "prettier": "^3.8.3",
+    "rollup": "^2.79.1",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-typescript2": "^0.37.0",
+    "tslib": "^2.8.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.60.1"
+  }
 }
