@@ -1,0 +1,26 @@
+# Source
+src/
+
+# Dev tooling
+demo/
+tests/
+tsconfig.json
+rollup.config.js
+.rpt2_cache/
+dist/ts-out/
+dist/types/
+
+# Editor / OS
+.idea/
+.vscode/
+.DS_Store
+*.log
+
+# Keep:
+#   dist/liquid-glass.esm.js
+#   dist/liquid-glass.cjs.js
+#   dist/liquid-glass.umd.js
+#   dist/liquid-glass.umd.min.js
+#   dist/types/  ← re-included below
+#   styles/
+!dist/types/

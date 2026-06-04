@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "opensource-guide-coach": {
+      "source": "xixu-me/skills",
+      "sourceType": "github",
+      "skillPath": "skills/opensource-guide-coach/SKILL.md",
+      "computedHash": "720db6b59f331be3bcabbf9082bbae9d2eb7d63483db7001578aa105a4d87985"
+    },
+    "ui-ux-pro-max": {
+      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/ui-ux-pro-max/SKILL.md",
+      "computedHash": "6337038fe1fe6bbe1b9f252ab678ee575859190bab6f0f246f4061824eb40875"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "target":                         "ES2017",
+        "module":                         "ESNext",
+        "moduleResolution":               "node",
+        "lib":                            ["ES2017", "DOM"],
+        "strict":                         true,
+        "declaration":                    true,
+        "declarationDir":                 "dist/types",
+        "outDir":                         "dist/ts-out",
+        "rootDir":                        "src",
+        "sourceMap":                      true,
+        "esModuleInterop":                true,
+        "forceConsistentCasingInFileNames": true,
+        "skipLibCheck":                   true,
+        "noUnusedLocals":                 false,
+        "noUnusedParameters":             false
+    },
+    "include": ["src"],
+    "exclude": ["node_modules", "dist", "tests", "demo"]
+}
