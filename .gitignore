@@ -1,5 +1,7 @@
 node_modules/
 dist/
 .DS_Store
-.idea
+.idea/
 *.tgz
+.rpt2_cache/
+dist/ts-out/
