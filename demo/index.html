@@ -10,6 +10,10 @@
       href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&display=swap"
       rel="stylesheet"
     />
+      <link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@avenra/liquid-glass/styles/liquid-glass.css"
+/>
     <link rel="stylesheet" href="../styles/liquid-glass.css" />
     <style>
       :root {
@@ -761,8 +765,11 @@
       })();
     </script>
 
-    <script type="module">
-      import {
+    <!-- CDN (production) -->
+    <script src="https://cdn.jsdelivr.net/npm/@avenra/liquid-glass/dist/liquid-glass.umd.min.js"></script>
+
+    <script>
+      const {
         createLiquidGlass,
         createLiquidButton,
         createLiquidSwitch,
@@ -783,7 +790,7 @@
         injectImages,
         setScale,
         nextFilterId,
-      } from '../dist/liquid-glass.esm.js';
+      } = LiquidGlass;
 
       function log(el, msg) {
         el.innerHTML = '';
