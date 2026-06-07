@@ -22,7 +22,7 @@ npm install @avenra/liquid-glass
 <script src="https://cdn.jsdelivr.net/npm/@avenra/liquid-glass/dist/liquid-glass.umd.min.js"></script>
 <link
   rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@avenra/liquid-glass/styles"
+  href="https://cdn.jsdelivr.net/npm/@avenra/liquid-glass/styles/liquid-glass.css"
 />
 ```
 
@@ -53,7 +53,7 @@ sl.on('change', ({ value }) => savePreference(value)); // fires on release
 <script src="https://cdn.jsdelivr.net/npm/@avenra/liquid-glass/dist/liquid-glass.umd.min.js"></script>
 <link
   rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@avenra/liquid-glass/styles"
+  href="https://cdn.jsdelivr.net/npm/@avenra/liquid-glass/styles/liquid-glass.css"
 />
 <button id="btn"></button>
 <script>
