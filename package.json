@@ -1,6 +1,6 @@
 {
   "name": "@avenra/liquid-glass",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Physics-based liquid glass UI effect — Snell's law SVG displacement maps, spring animations, zero runtime dependencies.",
   "main": "dist/liquid-glass.cjs.js",
   "module": "dist/liquid-glass.esm.js",
