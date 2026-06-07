@@ -1,0 +1,549 @@
+---
+title: Liquid Switch
+description: A physics-based liquid glass toggle switch with refractive bezel effects, specular highlights, and fluid on/off animations. Supports both controlled and uncontrolled usage.
+---
+
+import { TypeTable } from 'fumadocs-ui/components/type-table';
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+## Preview
+
+<Tabs items={['Preview', 'Code']}>
+  <Tab value="Preview">
+    <LiquidSwitchDemo />
+  </Tab>
+  <Tab value="Code">
+    ```tsx
+    'use client';
+
+    import { useState } from 'react';
+    import { LiquidSwitch } from '@/components/ui/liquid-switch';
+
+    export default function Demo() {
+      const [checked, setChecked] = useState(false);
+
+      return (
+        <LiquidSwitch
+          checked={checked}
+          onCheckedChange={setChecked}
+        />
+      );
+    }
+    ```
+  </Tab>
+</Tabs>
+
+---
+
+## Installation
+
+<Steps>
+  <Step>
+    ### Install the dependency
+
+    `LiquidSwitch` is powered by the `@avenra/liquid-glass` package.
+
+    <Tabs items={['npm', 'pnpm', 'yarn', 'bun']}>
+      <Tab value="npm">
+        ```bash
+        npm install @avenra/liquid-glass
+        ```
+      </Tab>
+      <Tab value="pnpm">
+        ```bash
+        pnpm add @avenra/liquid-glass
+        ```
+      </Tab>
+      <Tab value="yarn">
+        ```bash
+        yarn add @avenra/liquid-glass
+        ```
+      </Tab>
+      <Tab value="bun">
+        ```bash
+        bun add @avenra/liquid-glass
+        ```
+      </Tab>
+    </Tabs>
+  </Step>
+
+  <Step>
+    ### Add the component via shadcn CLI
+
+    <Tabs items={['npm', 'pnpm', 'yarn', 'bun']}>
+      <Tab value="npm">
+        ```bash
+        npx shadcn@latest add https://avenra.online/r/liquid-switch.json
+        ```
+      </Tab>
+      <Tab value="pnpm">
+        ```bash
+        pnpm dlx shadcn@latest add https://avenra.online/r/liquid-switch.json
+        ```
+      </Tab>
+      <Tab value="yarn">
+        ```bash
+        yarn dlx shadcn@latest add https://avenra.online/r/liquid-switch.json
+        ```
+      </Tab>
+      <Tab value="bun">
+        ```bash
+        bunx shadcn@latest add https://avenra.online/r/liquid-switch.json
+        ```
+      </Tab>
+    </Tabs>
+
+    This places the component at `components/ui/liquid-switch.tsx`.
+  </Step>
+
+  <Step>
+    ### Manual installation
+
+    Create `components/ui/liquid-switch.tsx` with the following content:
+
+    ```tsx title="components/ui/liquid-switch.tsx"
+    'use client';
+
+    import * as React from 'react';
+    import {
+      createLiquidSwitch,
+      type LiquidSwitchHandle,
+      type LiquidSwitchOptions,
+      type LiquidSwitchEventMap,
+    } from '@avenra/liquid-glass';
+
+    export interface LiquidSwitchProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
+      /** Controlled checked state. */
+      checked?: boolean;
+      /** Initial state for uncontrolled usage. */
+      defaultChecked?: boolean;
+      /** Called when the checked state changes. */
+      onCheckedChange?: (checked: boolean) => void;
+      /** Glass effect configuration. */
+      options?: LiquidSwitchOptions;
+    }
+
+    export const LiquidSwitch = React.forwardRef<LiquidSwitchHandle | null, LiquidSwitchProps>(
+      ({ checked, defaultChecked = false, onCheckedChange, options, className, ...props }, ref) => {
+        const containerRef = React.useRef<HTMLDivElement>(null);
+        const instanceRef = React.useRef<LiquidSwitchHandle | null>(null);
+
+        const isControlled = checked !== undefined;
+
+        React.useEffect(() => {
+          if (!containerRef.current) return;
+          if (instanceRef.current) return;
+          if (containerRef.current.children.length > 0) return;
+
+          const instance = createLiquidSwitch(containerRef.current, {
+            checked: checked ?? defaultChecked,
+            ...options,
+          });
+
+          instanceRef.current = instance;
+
+          const handleChange = (payload: LiquidSwitchEventMap['change']) => {
+            onCheckedChange?.(payload.checked);
+          };
+
+          instance.on('change', handleChange);
+
+          return () => {
+            instance.off('change', handleChange);
+            instance.destroy();
+            instanceRef.current = null;
+          };
+        }, []);
+
+        React.useEffect(() => {
+          if (!instanceRef.current || !isControlled) return;
+          instanceRef.current.checked = checked!;
+        }, [checked, isControlled]);
+
+        React.useImperativeHandle(ref, () => instanceRef.current!, []);
+
+        return <div ref={containerRef} className={className} {...props} />;
+      },
+    );
+
+    LiquidSwitch.displayName = 'LiquidSwitch';
+    ```
+  </Step>
+</Steps>
+
+---
+
+## Usage
+
+```tsx
+import { LiquidSwitch } from '@/components/ui/liquid-switch';
+```
+
+**Controlled** — you own the state:
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+import { LiquidSwitch } from '@/components/ui/liquid-switch';
+
+export default function Example() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <LiquidSwitch
+      checked={checked}
+      onCheckedChange={setChecked}
+    />
+  );
+}
+```
+
+**Uncontrolled** — the switch manages its own state internally:
+
+```tsx
+<LiquidSwitch defaultChecked={true} />
+```
+
+---
+
+## Examples
+
+### Uncontrolled with defaultChecked
+
+Use `defaultChecked` when you don't need to track the switch state in React — the component manages its own toggle internally.
+
+<Tabs items={['Preview', 'Code']}>
+  <Tab value="Preview">
+    <LiquidSwitchUncontrolledDemo />
+  </Tab>
+  <Tab value="Code">
+    ```tsx
+    {/* starts unchecked */}
+    <LiquidSwitch defaultChecked={false} />
+
+    {/* starts checked */}
+    <LiquidSwitch defaultChecked={true} />
+    ```
+  </Tab>
+</Tabs>
+
+---
+
+### Controlled with external state
+
+Drive the switch from outside using `checked` and `onCheckedChange`. The glass thumb position syncs reactively whenever `checked` changes.
+
+<Tabs items={['Preview', 'Code']}>
+  <Tab value="Preview">
+    <LiquidSwitchControlledDemo />
+  </Tab>
+  <Tab value="Code">
+    ```tsx
+    'use client';
+
+    import { useState } from 'react';
+    import { LiquidSwitch } from '@/components/ui/liquid-switch';
+
+    export default function Example() {
+      const [checked, setChecked] = useState(false);
+
+      return (
+        <div className="flex flex-col gap-4">
+          <LiquidSwitch checked={checked} onCheckedChange={setChecked} />
+          <div className="flex gap-2">
+            <button onClick={() => setChecked(false)}>Force Off</button>
+            <button onClick={() => setChecked(true)}>Force On</button>
+          </div>
+          <p>State: {String(checked)}</p>
+        </div>
+      );
+    }
+    ```
+  </Tab>
+</Tabs>
+
+---
+
+### With label
+
+A common pattern — pair `LiquidSwitch` with a label in a settings list. Each switch is independently controlled.
+
+<Tabs items={['Preview', 'Code']}>
+  <Tab value="Preview">
+    <LiquidSwitchWithLabelDemo />
+  </Tab>
+  <Tab value="Code">
+    ```tsx
+    'use client';
+
+    import { useState } from 'react';
+    import { LiquidSwitch } from '@/components/ui/liquid-switch';
+
+    export default function Example() {
+      const [notifications, setNotifications] = useState(true);
+      const [darkMode, setDarkMode]           = useState(false);
+      const [analytics, setAnalytics]         = useState(true);
+
+      return (
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium">Push notifications</span>
+            <LiquidSwitch checked={notifications} onCheckedChange={setNotifications} />
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium">Dark mode</span>
+            <LiquidSwitch checked={darkMode} onCheckedChange={setDarkMode} />
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium">Analytics</span>
+            <LiquidSwitch checked={analytics} onCheckedChange={setAnalytics} />
+          </div>
+        </div>
+      );
+    }
+    ```
+  </Tab>
+</Tabs>
+
+---
+
+### Listening to change events
+
+`onCheckedChange` fires every time the checked state flips — whether the user clicked or the state was set programmatically.
+
+<Tabs items={['Preview', 'Code']}>
+  <Tab value="Preview">
+    <LiquidSwitchRefDemo />
+  </Tab>
+  <Tab value="Code">
+    ```tsx
+    <LiquidSwitch
+      defaultChecked={false}
+      onCheckedChange={(checked) => {
+        console.log('switch is now:', checked);
+        // e.g. save to database, update a store, etc.
+      }}
+    />
+    ```
+  </Tab>
+</Tabs>
+
+---
+
+### Glass appearance options
+
+All `GlassOptions` are available via the `options` prop — controlling refraction intensity, bezel width, specular highlight, and more.
+
+<Tabs items={['Preview', 'Code']}>
+  <Tab value="Preview">
+    <LiquidSwitchGlassDemo />
+  </Tab>
+  <Tab value="Code">
+    ```tsx
+    {/* Subtle — low refraction, soft highlight */}
+    <LiquidSwitch
+      checked={checked}
+      onCheckedChange={setChecked}
+      options={{ refractiveIndex: 1.2, specularSlope: 0.3 }}
+    />
+
+    {/* Default */}
+    <LiquidSwitch checked={checked} onCheckedChange={setChecked} />
+
+    {/* Intense — strong distortion, wide bezel, full glint */}
+    <LiquidSwitch
+      checked={checked}
+      onCheckedChange={setChecked}
+      options={{ refractiveIndex: 2.0, specularSlope: 1, bezelWidth: 32 }}
+    />
+    ```
+  </Tab>
+</Tabs>
+
+---
+
+### Imperative API via ref
+
+`LiquidSwitch` forwards its ref to the underlying `LiquidSwitchHandle` instance, giving you access to `toggle()` and `checked` imperatively.
+
+```tsx
+'use client';
+
+import { useRef } from 'react';
+import { LiquidSwitch } from '@/components/ui/liquid-switch';
+import type { LiquidSwitchHandle } from '@avenra/liquid-glass';
+
+export default function Example() {
+  const switchRef = useRef<LiquidSwitchHandle | null>(null);
+
+  return (
+    <div className="flex flex-col gap-4">
+      <LiquidSwitch ref={switchRef} defaultChecked={false} />
+      <button onClick={() => switchRef.current?.toggle()}>
+        Toggle imperatively
+      </button>
+      <button onClick={() => console.log(switchRef.current?.checked)}>
+        Log current state
+      </button>
+    </div>
+  );
+}
+```
+
+> Note: Unlike `LiquidButton` and `LiquidSlider`, the ref on `LiquidSwitch` points to the `LiquidSwitchHandle` instance — not the DOM element. Use `switchRef.current?.element` to access the underlying DOM node.
+
+---
+
+## API Reference
+
+### LiquidSwitchProps
+
+<TypeTable
+  type={{
+    checked: {
+      description: 'Controlled checked state. When provided, the component is in controlled mode and will not update unless this prop changes.',
+      type: 'boolean',
+    },
+    defaultChecked: {
+      description: 'Initial checked state for uncontrolled usage. Ignored once the component mounts — use checked + onCheckedChange to control the state after mount.',
+      type: 'boolean',
+      default: 'false',
+    },
+    onCheckedChange: {
+      description: 'Callback fired when the checked state changes, whether from user interaction or a programmatic toggle.',
+      type: '(checked: boolean) => void',
+    },
+    options: {
+      description: 'Glass effect configuration passed to createLiquidSwitch. See LiquidSwitchOptions below.',
+      type: 'LiquidSwitchOptions',
+    },
+  }}
+/>
+
+All standard `HTMLDivElement` attributes (`className`, `style`, `aria-*`, etc.) are forwarded via rest props. `onChange` is intentionally excluded — use `onCheckedChange` instead.
+
+---
+
+### LiquidSwitchOptions
+
+`LiquidSwitchOptions` extends `GlassOptions` with one additional field.
+
+<TypeTable
+  type={{
+    checked: {
+      description: 'Initial checked state passed to the underlying engine. Prefer the top-level defaultChecked or checked props for React-idiomatic usage.',
+      type: 'boolean',
+      default: 'false',
+    },
+    width: {
+      description: 'Override element width in px. Auto-detected from the DOM if omitted.',
+      type: 'number',
+    },
+    height: {
+      description: 'Override element height in px. Auto-detected from the DOM if omitted.',
+      type: 'number',
+    },
+    radius: {
+      description: 'Corner radius in px. Pass null to auto-read from CSS border-radius.',
+      type: 'number | null',
+    },
+    bezelWidth: {
+      description: 'Width of the refractive bezel rim in px.',
+      type: 'number',
+      default: '20',
+    },
+    glassThickness: {
+      description: 'Virtual glass depth that controls lateral ray drift through the lens.',
+      type: 'number',
+      default: '80',
+    },
+    refractiveIndex: {
+      description: 'Index of refraction n₂. Air = 1.0, typical glass ≈ 1.5. Higher values produce stronger distortion.',
+      type: 'number',
+      default: '1.5',
+    },
+    profile: {
+      description: 'Surface height profile of the bezel rim, controlling how light bends across it.',
+      type: "'convexSquircle' | 'flat' | 'concave' | Profile",
+      default: "'convexSquircle'",
+    },
+    blur: {
+      description: 'Pre-displacement Gaussian blur stdDeviation applied inside the SVG filter.',
+      type: 'number',
+      default: '0.5',
+    },
+    saturation: {
+      description: 'Post-displacement colour saturation multiplier. Values above 1 intensify colours.',
+      type: 'number',
+      default: '1.3',
+    },
+    specularSlope: {
+      description: 'Specular highlight intensity on the glass surface. Range: 0 (none) to 1 (full).',
+      type: 'number',
+      default: '0.8',
+    },
+    filterMode: {
+      description: 'SVG filter blend mode used when compositing the specular highlight layer.',
+      type: "'screen' | 'overlay' | FilterMode",
+      default: "'screen'",
+    },
+  }}
+/>
+
+---
+
+### LiquidSwitchHandle
+
+The imperative handle exposed via `ref`. Gives direct access to the underlying engine instance.
+
+<TypeTable
+  type={{
+    element: {
+      description: 'The underlying DOM element the switch is mounted on.',
+      type: 'Element',
+    },
+    checked: {
+      description: 'Get or set the checked state directly. Setting this does not fire the onCheckedChange callback — use it only for imperative control outside the React tree.',
+      type: 'boolean',
+    },
+    toggle: {
+      description: 'Imperatively toggles the checked state and returns the handle for chaining.',
+      type: '() => this',
+    },
+    on: {
+      description: 'Attach a typed event listener to the switch instance.',
+      type: '<K extends keyof LiquidSwitchEventMap>(event: K, fn: (payload) => void) => this',
+    },
+    off: {
+      description: 'Remove a previously attached event listener.',
+      type: '<K extends keyof LiquidSwitchEventMap>(event: K, fn?: (payload) => void) => this',
+    },
+    once: {
+      description: 'Attach a one-time event listener that auto-removes after the first call.',
+      type: '<K extends keyof LiquidSwitchEventMap>(event: K, fn: (payload) => void) => this',
+    },
+    destroy: {
+      description: 'Tears down the switch instance and removes it from the DOM. Called automatically on component unmount.',
+      type: '() => void',
+    },
+  }}
+/>
+
+---
+
+### LiquidSwitchEventMap
+
+<TypeTable
+  type={{
+    change: {
+      description: 'Fires when the checked state changes, both from user interaction and programmatic updates via handle.checked or handle.toggle().',
+      type: '{ checked: boolean; element: Element }',
+    },
+    destroy: {
+      description: 'Fires when the LiquidSwitch instance is destroyed on component unmount.',
+      type: 'undefined',
+    },
+  }}
+/>
