@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "liquid-switch",
+  "title": "Switch",
+  "description": "A liquid glass switch.",
+  "files": [
+    {
+      "path": "registry/components/switch/index.tsx",
+      "content": "'use client';\n\nimport * as React from 'react';\nimport {\n  createLiquidSwitch,\n  type LiquidSwitchHandle,\n  type LiquidSwitchOptions,\n  type LiquidSwitchEventMap,\n} from '@avenra/liquid-glass';\n\nexport interface LiquidSwitchProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {\n  /** Controlled state */\n  checked?: boolean;\n  /** Default state for uncontrolled usage */\n  defaultChecked?: boolean;\n  /** Called when checked state changes */\n  onCheckedChange?: (checked: boolean) => void;\n  /** Pass-through options for the underlying library */\n  options?: LiquidSwitchOptions;\n}\n\nexport const LiquidSwitch = React.forwardRef<LiquidSwitchHandle | null, LiquidSwitchProps>(\n  ({ checked, defaultChecked = false, onCheckedChange, options, className, ...props }, ref) => {\n    const containerRef = React.useRef<HTMLDivElement>(null);\n    const instanceRef = React.useRef<LiquidSwitchHandle | null>(null);\n\n    const isControlled = checked !== undefined;\n\n    // Initialize component\n    React.useEffect(() => {\n      if (!containerRef.current) return;\n      if (instanceRef.current) return;\n      if (containerRef.current.children.length > 0) return;\n\n      const instance = createLiquidSwitch(containerRef.current, {\n        checked: checked ?? defaultChecked,\n        ...options,\n      });\n\n      instanceRef.current = instance;\n\n      const handleChange = (payload: LiquidSwitchEventMap['change']) => {\n        onCheckedChange?.(payload.checked);\n      };\n\n      instance.on('change', handleChange);\n\n      return () => {\n        instance.off('change', handleChange);\n        instance.destroy();\n        instanceRef.current = null;\n      };\n    }, []);\n\n    // Sync controlled state\n    React.useEffect(() => {\n      if (!instanceRef.current || !isControlled) return;\n      instanceRef.current.checked = checked!;\n    }, [checked, isControlled]);\n\n    // Expose imperative API\n    React.useImperativeHandle(ref, () => instanceRef.current!, []);\n\n    return <div ref={containerRef} className={className} {...props} />;\n  },\n);\n\nLiquidSwitch.displayName = 'LiquidSwitch';\n",
+      "type": "registry:ui",
+      "target": "@components/ui/liquid-switch.tsx"
+    }
+  ],
+  "type": "registry:ui"
+}

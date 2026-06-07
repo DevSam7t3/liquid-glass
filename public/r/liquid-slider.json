@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "liquid-slider",
+  "title": "Slider",
+  "description": "A liquid glass slider.",
+  "files": [
+    {
+      "path": "registry/components/slider/index.tsx",
+      "content": "'use client';\n\nimport React, { useEffect, useRef, forwardRef, useImperativeHandle } from 'react';\nimport {\n  createLiquidSlider,\n  LiquidSliderHandle,\n  LiquidSliderEventMap,\n  LiquidSliderOptions,\n} from '@avenra/liquid-glass';\n\nexport interface LiquidSliderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {\n  min: number;\n  max: number;\n  value: number;\n  options?: LiquidSliderOptions;\n  events?: {\n    [K in keyof LiquidSliderEventMap]?: (payload: LiquidSliderEventMap[K]) => void;\n  };\n}\n\nexport const LiquidSlider = forwardRef<HTMLDivElement, LiquidSliderProps>(\n  ({ min, max, value, options, events, ...props }, ref) => {\n    const containerRef = useRef<HTMLDivElement>(null);\n    const handleRef = useRef<LiquidSliderHandle | null>(null);\n\n    useImperativeHandle(ref, () => containerRef.current as HTMLDivElement);\n\n    useEffect(() => {\n      if (!containerRef.current) return;\n\n      if (containerRef.current.children.length > 0) return; // already initialized\n\n      handleRef.current = createLiquidSlider(containerRef.current, {\n        min,\n        max,\n        value,\n        blur: 0,\n        ...options,\n      });\n\n      return () => {\n        handleRef.current?.destroy();\n        handleRef.current = null;\n      };\n    }, []);\n\n    useEffect(() => {\n      if (!handleRef.current) return;\n\n      handleRef.current.value = value;\n    }, [value]);\n\n    useEffect(() => {\n      if (!handleRef.current) return;\n\n      handleRef.current.value = Math.min(Math.max(value, min), max);\n    }, [min, max]);\n\n    useEffect(() => {\n      if (!handleRef.current || !events) return;\n\n      const handle = handleRef.current;\n\n      for (const key in events) {\n        const event = key as keyof LiquidSliderEventMap;\n        const handler = events[event];\n\n        if (handler) {\n          handle.on(event, handler as (payload: LiquidSliderEventMap[typeof event]) => void);\n        }\n      }\n\n      return () => {\n        if (!handleRef.current || !events) return;\n\n        const handle = handleRef.current;\n\n        for (const key in events) {\n          const event = key as keyof LiquidSliderEventMap;\n          const handler = events[event];\n\n          if (handler) {\n            handle.off(event, handler as (payload: LiquidSliderEventMap[typeof event]) => void);\n          }\n        }\n      };\n    }, [events]);\n\n    return <div ref={containerRef} {...props} />;\n  },\n);\n\nLiquidSlider.displayName = 'LiquidSlider';\n",
+      "type": "registry:ui",
+      "target": "@components/ui/liquid-slider.tsx"
+    }
+  ],
+  "type": "registry:ui"
+}

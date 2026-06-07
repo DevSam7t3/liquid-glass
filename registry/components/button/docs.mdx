@@ -1,0 +1,482 @@
+---
+title: Liquid Button
+description: A physics-based liquid glass button with refractive bezel effects, specular highlights, and smooth interaction animations.
+---
+
+import { TypeTable } from 'fumadocs-ui/components/type-table';
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+## Preview
+
+<Tabs items={['Preview', 'Code']}>
+  <Tab value="Preview">
+    <LiquidButtonDemo />
+  </Tab>
+  <Tab value="Code">
+    ```tsx
+    import { LiquidButton } from '@/components/ui/liquid-button';
+
+    export default function Demo() {
+      return (
+        <LiquidButton label="Click me" className="px-8 py-3 text-base font-medium" />
+      );
+    }
+    ```
+  </Tab>
+</Tabs>
+
+---
+
+## Installation
+
+<Steps>
+  <Step>
+    ### Install the dependency
+
+    The `LiquidButton` component requires the `@avenra/liquid-glass` package.
+
+    <Tabs items={['npm', 'pnpm', 'yarn', 'bun']}>
+      <Tab value="npm">
+        ```bash
+        npm install @avenra/liquid-glass
+        ```
+      </Tab>
+      <Tab value="pnpm">
+        ```bash
+        pnpm add @avenra/liquid-glass
+        ```
+      </Tab>
+      <Tab value="yarn">
+        ```bash
+        yarn add @avenra/liquid-glass
+        ```
+      </Tab>
+      <Tab value="bun">
+        ```bash
+        bun add @avenra/liquid-glass
+        ```
+      </Tab>
+    </Tabs>
+  </Step>
+
+  <Step>
+    ### Add the component via shadcn CLI
+
+    Run the following command to add `LiquidButton` directly to your project:
+
+    <Tabs items={['npm', 'pnpm', 'yarn', 'bun']}>
+      <Tab value="npm">
+        ```bash
+        npx shadcn@latest add https://avenra.online/r/liquid-button.json
+        ```
+      </Tab>
+      <Tab value="pnpm">
+        ```bash
+        pnpm dlx shadcn@latest add https://avenra.online/r/liquid-button.json
+        ```
+      </Tab>
+      <Tab value="yarn">
+        ```bash
+        yarn dlx shadcn@latest add https://avenra.online/r/liquid-button.json
+        ```
+      </Tab>
+      <Tab value="bun">
+        ```bash
+        bunx shadcn@latest add https://avenra.online/r/liquid-button.json
+        ```
+      </Tab>
+    </Tabs>
+
+    This will place the component at `components/ui/liquid-button.tsx`.
+  </Step>
+
+  <Step>
+    ### Manual installation
+
+    If you prefer to copy the file manually, create `components/ui/liquid-button.tsx` with the following content:
+
+    ```tsx title="components/ui/liquid-button.tsx"
+    'use client';
+
+    import React, { useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
+    import {
+      createLiquidButton,
+      LiquidButtonEventMap,
+      LiquidButtonHandle,
+      LiquidButtonOptions,
+    } from '@avenra/liquid-glass';
+
+    type LiquidButtonEvents = {
+      [K in keyof LiquidButtonEventMap]?: (event: LiquidButtonEventMap[K]) => void;
+    };
+
+    export interface LiquidButtonProps
+      extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onClick'> {
+      label: string;
+      options?: LiquidButtonOptions;
+      events?: LiquidButtonEvents;
+    }
+
+    export const LiquidButton = forwardRef<HTMLButtonElement, LiquidButtonProps>(
+      ({ label, options, events, ...props }, ref) => {
+        const buttonRef = useRef<HTMLButtonElement>(null);
+        const handleRef = useRef<LiquidButtonHandle | null>(null);
+
+        useImperativeHandle(ref, () => buttonRef.current as HTMLButtonElement);
+
+        useEffect(() => {
+          if (!buttonRef.current) return;
+          handleRef.current = createLiquidButton(buttonRef.current, { label, ...options });
+          return () => {
+            handleRef.current?.destroy();
+            handleRef.current = null;
+          };
+        }, []);
+
+        useEffect(() => {
+          handleRef.current?.setLabel(label);
+        }, [label]);
+
+        useEffect(() => {
+          if (!handleRef.current || !events) return;
+          (Object.keys(events) as (keyof LiquidButtonEventMap)[]).forEach((event) => {
+            const handler = events[event];
+            if (handler) {
+              handleRef.current?.on(
+                event,
+                handler as (e: LiquidButtonEventMap[typeof event]) => void,
+              );
+            }
+          });
+          return () => {
+            if (!handleRef.current || !events) return;
+            (Object.keys(events) as (keyof LiquidButtonEventMap)[]).forEach((event) => {
+              handleRef.current?.off?.(event);
+            });
+          };
+        }, [events]);
+
+        return <button ref={buttonRef} {...props} />;
+      },
+    );
+
+    LiquidButton.displayName = 'LiquidButton';
+    ```
+  </Step>
+</Steps>
+
+---
+
+## Usage
+
+Import and use the component anywhere in your app:
+
+```tsx
+import { LiquidButton } from '@/components/ui/liquid-button';
+```
+
+```tsx
+<LiquidButton label="Get Started" />
+```
+
+---
+
+## Examples
+
+### Default
+
+The simplest usage — a button with a label and the glass effect applied automatically.
+
+<Tabs items={['Preview', 'Code']}>
+  <Tab value="Preview">
+    <LiquidButtonDemo />
+  </Tab>
+  <Tab value="Code">
+    ```tsx
+    <LiquidButton label="Get Started" />
+    ```
+  </Tab>
+</Tabs>
+
+---
+
+### Custom Refractive Index
+
+Adjust the index of refraction to make the glass effect more or less pronounced. Values close to `1.0` are nearly invisible; higher values (e.g. `2.0`) produce an intense fish-eye distortion.
+
+<Tabs items={['Preview', 'Code']}>
+  <Tab value="Preview">
+    <LiquidButtonRefractiveDemo />
+  </Tab>
+  <Tab value="Code">
+    ```tsx
+    {/* Subtle refraction */}
+    <LiquidButton label="Subtle" options={{ refractiveIndex: 1.2 }} />
+
+    {/* Default glass-like refraction */}
+    <LiquidButton label="Default" options={{ refractiveIndex: 1.5 }} />
+
+    {/* Strong distortion */}
+    <LiquidButton label="Strong" options={{ refractiveIndex: 2.0 }} />
+    ```
+  </Tab>
+</Tabs>
+
+---
+
+### Bezel Width
+
+The `bezelWidth` option controls the width of the refractive rim around the button edge.
+
+<Tabs items={['Preview', 'Code']}>
+  <Tab value="Preview">
+    <LiquidButtonBezelDemo />
+  </Tab>
+  <Tab value="Code">
+    ```tsx
+    <LiquidButton label="Thin Bezel"    options={{ bezelWidth: 8 }}  />
+    <LiquidButton label="Default Bezel" options={{ bezelWidth: 20 }} />
+    <LiquidButton label="Thick Bezel"   options={{ bezelWidth: 40 }} />
+    ```
+  </Tab>
+</Tabs>
+
+---
+
+### Surface Profile
+
+The `profile` option changes the height-map of the bezel, altering how light refracts across it.
+
+<Tabs items={['Preview', 'Code']}>
+  <Tab value="Preview">
+    <LiquidButtonProfileDemo />
+  </Tab>
+  <Tab value="Code">
+    ```tsx
+    <LiquidButton label="convexSquircle" options={{ profile: 'convexSquircle' }} />
+    <LiquidButton label="flat"           options={{ profile: 'flat' }} />
+    <LiquidButton label="concave"        options={{ profile: 'concave' }} />
+    ```
+  </Tab>
+</Tabs>
+
+---
+
+### Specular Highlight Intensity
+
+The `specularSlope` option (0–1) controls how bright the specular glint on the glass surface is.
+
+<Tabs items={['Preview', 'Code']}>
+  <Tab value="Preview">
+    <LiquidButtonSpecularDemo />
+  </Tab>
+  <Tab value="Code">
+    ```tsx
+    <LiquidButton label="No Glint"      options={{ specularSlope: 0 }}   />
+    <LiquidButton label="Default Glint" options={{ specularSlope: 0.8 }} />
+    <LiquidButton label="Full Glint"    options={{ specularSlope: 1 }}   />
+    ```
+  </Tab>
+</Tabs>
+
+---
+
+### Handling Events
+
+Pass typed mouse event handlers via the `events` prop. `onClick` is intentionally omitted from the component's props — use `events.click` instead for full type safety against the underlying engine's event system.
+
+<Tabs items={['Preview', 'Code']}>
+  <Tab value="Preview">
+    <LiquidButtonEventsDemo />
+  </Tab>
+  <Tab value="Code">
+    ```tsx
+    <LiquidButton
+      label="Click me"
+      events={{
+        click: (e: MouseEvent) => console.log('clicked', e),
+        mouseenter: (e: MouseEvent) => console.log('entered', e),
+        mouseleave: (e: MouseEvent) => console.log('left', e),
+      }}
+    />
+    ```
+  </Tab>
+</Tabs>
+
+---
+
+### Forwarded Ref
+
+`LiquidButton` forwards its ref to the underlying `<button>` element, letting you call DOM methods imperatively.
+
+```tsx
+'use client';
+
+import { useRef } from 'react';
+import { LiquidButton } from '@/components/ui/liquid-button';
+
+export default function Example() {
+  const btnRef = useRef<HTMLButtonElement>(null);
+
+  return (
+    <LiquidButton
+      ref={btnRef}
+      label="Focus me"
+      events={{
+        click: () => btnRef.current?.blur(),
+      }}
+    />
+  );
+}
+```
+
+---
+
+### Dynamic Label
+
+The label syncs reactively — update it via state and the glass button re-renders the text without destroying the effect instance.
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+import { LiquidButton } from '@/components/ui/liquid-button';
+
+export default function Example() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <LiquidButton
+      label={`Clicked ${count} times`}
+      events={{ click: () => setCount((c) => c + 1) }}
+    />
+  );
+}
+```
+
+---
+
+## API Reference
+
+### LiquidButtonProps
+
+<TypeTable
+  type={{
+    label: {
+      description: 'Text displayed inside the button. Updates reactively via setLabel without destroying the effect instance.',
+      type: 'string',
+      required: true,
+    },
+    options: {
+      description: 'Glass effect configuration passed to createLiquidButton. See LiquidButtonOptions below.',
+      type: 'LiquidButtonOptions',
+    },
+    events: {
+      description: 'Typed event handlers bound to the LiquidButton instance. Supports: click, mouseenter, mouseleave, mousedown, mouseup, destroy.',
+      type: 'LiquidButtonEvents',
+    },
+  }}
+/>
+
+All standard `HTMLButtonElement` attributes (`className`, `disabled`, `style`, `aria-*`, etc.) are forwarded via rest props. `onClick` is intentionally excluded — use `events.click` instead.
+
+---
+
+### LiquidButtonOptions
+
+`LiquidButtonOptions` extends `GlassOptions` with one additional field.
+
+<TypeTable
+  type={{
+    label: {
+      description: 'Text to display inside the button. Prefer using the top-level label prop for reactive updates.',
+      type: 'string',
+    },
+    width: {
+      description: 'Override element width in px. Auto-detected from the DOM if omitted.',
+      type: 'number',
+    },
+    height: {
+      description: 'Override element height in px. Auto-detected from the DOM if omitted.',
+      type: 'number',
+    },
+    radius: {
+      description: 'Corner radius in px. Pass null to auto-read the value from the element\'s computed CSS border-radius.',
+      type: 'number | null',
+    },
+    bezelWidth: {
+      description: 'Width of the refractive bezel rim in px.',
+      type: 'number',
+      default: '20',
+    },
+    glassThickness: {
+      description: 'Virtual glass depth that controls lateral ray drift through the lens.',
+      type: 'number',
+      default: '80',
+    },
+    refractiveIndex: {
+      description: 'Index of refraction n₂. Air = 1.0, typical glass ≈ 1.5. Higher values produce stronger distortion.',
+      type: 'number',
+      default: '1.5',
+    },
+    profile: {
+      description: 'Surface height profile of the bezel, controlling how light bends across the rim.',
+      type: "'convexSquircle' | 'flat' | 'concave' | Profile",
+      default: "'convexSquircle'",
+    },
+    blur: {
+      description: 'Pre-displacement Gaussian blur stdDeviation applied inside the SVG filter.',
+      type: 'number',
+      default: '0.5',
+    },
+    saturation: {
+      description: 'Post-displacement colour saturation multiplier. Values above 1 intensify colours.',
+      type: 'number',
+      default: '1.3',
+    },
+    specularSlope: {
+      description: 'Specular highlight intensity on the glass surface. Range: 0 (none) to 1 (full).',
+      type: 'number',
+      default: '0.8',
+    },
+    filterMode: {
+      description: 'SVG filter blend mode used when compositing the specular highlight layer.',
+      type: "'screen' | 'overlay' | FilterMode",
+      default: "'screen'",
+    },
+  }}
+/>
+
+---
+
+### LiquidButtonEventMap
+
+<TypeTable
+  type={{
+    click: {
+      description: 'Fired when the button is clicked.',
+      type: 'MouseEvent',
+    },
+    mouseenter: {
+      description: 'Fired when the pointer enters the button boundary.',
+      type: 'MouseEvent',
+    },
+    mouseleave: {
+      description: 'Fired when the pointer leaves the button boundary.',
+      type: 'MouseEvent',
+    },
+    mousedown: {
+      description: 'Fired when a mouse button is pressed down over the element.',
+      type: 'MouseEvent',
+    },
+    mouseup: {
+      description: 'Fired when a pressed mouse button is released over the element.',
+      type: 'MouseEvent',
+    },
+    destroy: {
+      description: 'Fired when the LiquidButton instance is destroyed on component unmount.',
+      type: 'undefined',
+    },
+  }}
+/>
