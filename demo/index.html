@@ -10,11 +10,10 @@
       href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&display=swap"
       rel="stylesheet"
     />
-      <link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@avenra/liquid-glass/styles/liquid-glass.css"
-/>
-    <link rel="stylesheet" href="../styles/liquid-glass.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@avenra/liquid-glass/styles/liquid-glass.css"
+    />
     <style>
       :root {
         --bg: #09090b;
@@ -531,7 +530,9 @@
           ></div>
           <button id="demoBtn"></button>
         </div>
-        <div class="event-log" id="btnLog"><span class="muted">Events appear here…</span></div>
+        <div class="event-log" id="btnLog">
+          <span class="muted">Events appear here…</span>
+        </div>
       </article>
 
       <!-- 03 ── Switch -->
@@ -544,7 +545,9 @@
         <div class="stage" id="s-switch">
           <div id="demoSwitch"></div>
         </div>
-        <div class="event-log" id="swLog"><span class="muted">Events appear here…</span></div>
+        <div class="event-log" id="swLog">
+          <span class="muted">Events appear here…</span>
+        </div>
       </article>
 
       <!-- 04 ── Slider -->
@@ -557,7 +560,9 @@
         <div class="stage" id="s-slider">
           <div id="demoSlider"></div>
         </div>
-        <div class="event-log" id="slLog"><span class="muted">Events appear here…</span></div>
+        <div class="event-log" id="slLog">
+          <span class="muted">Events appear here…</span>
+        </div>
       </article>
 
       <!-- 05 ── Generic Glass -->
@@ -623,7 +628,7 @@
       </article>
 
       <!-- 07 ── Cursor -->
-      <article class="exhibit span-8">
+      <article class="exhibit span-4">
         <div class="exhibit-info">
           <span class="exhibit-no">07</span>
           <h2 class="exhibit-title">Cursor Optics</h2>
@@ -676,7 +681,7 @@
       </article>
 
       <!-- 08 ── Input -->
-      <article class="exhibit span-4">
+      <article class="exhibit span-8">
         <div class="exhibit-info">
           <span class="exhibit-no">08</span>
           <h2 class="exhibit-title">Fluid Input</h2>
@@ -693,7 +698,9 @@
           ></div>
           <div id="demoInput"></div>
         </div>
-        <div class="event-log" id="inputLog"><span class="muted">Type to see events…</span></div>
+        <div class="event-log" id="inputLog">
+          <span class="muted">Type to see events…</span>
+        </div>
       </article>
 
       <!-- 09 ── Dial -->
@@ -726,7 +733,9 @@
             <div id="demoTooltip" style="width: 160px; height: 46px; border-radius: 23px"></div>
           </div>
         </div>
-        <div class="event-log" id="tipLog"><span class="muted">Hover to see events…</span></div>
+        <div class="event-log" id="tipLog">
+          <span class="muted">Hover to see events…</span>
+        </div>
       </article>
 
       <!-- 11 ── Progress -->
@@ -768,7 +777,7 @@
     <!-- CDN (production) -->
     <script src="https://cdn.jsdelivr.net/npm/@avenra/liquid-glass/dist/liquid-glass.umd.min.js"></script>
 
-    <script>
+    <script type="module">
       const {
         createLiquidGlass,
         createLiquidButton,
@@ -869,7 +878,9 @@
           const oy = drag ? 16 : 4,
             b = drag ? 24 : 12,
             a = drag ? 0.22 : 0.15;
-          inner.style.boxShadow = `4px ${oy}px ${b}px rgba(0,0,0,${a}),inset 0 ${oy * 0.4}px 16px rgba(0,0,0,${a * 0.6}),inset 0 ${-oy * 0.4}px 16px rgba(255,255,255,${a * 0.48})`;
+          inner.style.boxShadow = `4px ${oy}px ${b}px rgba(0,0,0,${a}),inset 0 ${
+            oy * 0.4
+          }px 16px rgba(0,0,0,${a * 0.6}),inset 0 ${-oy * 0.4}px 16px rgba(255,255,255,${a * 0.48})`;
           if (!drag) {
             vx *= 0.95;
             vy *= 0.95;

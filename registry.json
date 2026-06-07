@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "acme",
+  "homepage": "https://acme.com",
+  "items": [
+    {
+      "name": "liquid-button",
+      "type": "registry:ui",
+      "title": "Button",
+      "description": "A liquid glass button.",
+      "dependency": ["@avenra/liquid-glass"],
+      "files": [
+        {
+          "path": "registry/components/button/index.tsx",
+          "type": "registry:ui",
+          "target": "@components/ui/liquid-button.tsx"
+        }
+      ]
+    }
+  ]
+}

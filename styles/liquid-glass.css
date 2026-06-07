@@ -33,9 +33,9 @@
   border-radius: inherit;
   pointer-events: none;
   z-index: 3;
-  background: var(--lg-tint);
+  /* background: var(--lg-tint);
   border: 1px solid var(--lg-border);
-  box-shadow: var(--lg-shadow-out), var(--lg-shadow-hi), var(--lg-shadow-lo);
+  box-shadow: var(--lg-shadow-out), var(--lg-shadow-hi), var(--lg-shadow-lo); */
 }
 
 .lg-clone {
@@ -64,14 +64,16 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 100px;
+  border-radius: 20px;
   will-change: transform;
   cursor: pointer;
   user-select: none;
   touch-action: none;
-  min-width: 120px;
+  min-width: 160px;
   min-height: 48px;
-  padding: 0 1.5rem;
+  padding: 1.2rem 1.8rem;
+  background: none;
+  border: none;
 }
 
 .lg-button-text {
@@ -198,7 +200,7 @@
   width: 100%;
   height: 100%;
   border: none;
-  background: transparent;
+  background: none;
   padding: 0 1.5rem;
   font-family: inherit;
   font-size: 1rem;

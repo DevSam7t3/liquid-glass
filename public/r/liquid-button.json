@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "liquid-button",
+  "title": "Button",
+  "description": "A liquid glass button.",
+  "files": [
+    {
+      "path": "registry/components/button/index.tsx",
+      "content": "'use client';\n\nimport React, { useEffect, useRef } from 'react';\nimport { createLiquidButton, LiquidButtonHandle } from '@avenra/liquid-glass';\n\ninterface Props {\n  label: string;\n  onClick?: () => void;\n}\n\nexport const LiquidButton: React.FC<Props> = ({ label, onClick }) => {\n  const containerRef = useRef<HTMLButtonElement>(null);\n  const handleRef = useRef<LiquidButtonHandle | null>(null);\n\n  useEffect(() => {\n    if (containerRef.current) {\n      // 1. Initialize the component\n      handleRef.current = createLiquidButton(containerRef.current, { label });\n\n      // 2. Wire up events\n      if (onClick) {\n        handleRef.current.on('click', onClick);\n      }\n    }\n\n    // 3. Cleanup on unmount\n    return () => {\n      handleRef.current?.destroy();\n    };\n  }, [onClick]); // Re-run if onClick handler changes\n\n  // Update label if it changes\n  useEffect(() => {\n    handleRef.current?.setLabel(label);\n  }, [label]);\n\n  return <button ref={containerRef} />;\n};\n",
+      "type": "registry:ui",
+      "target": "src/components/ui/liquid-button.tsx"
+    }
+  ],
+  "type": "registry:ui"
+}
