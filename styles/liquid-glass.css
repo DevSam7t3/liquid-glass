@@ -374,6 +374,281 @@
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
+/* ── Radio ──────────────────────────────────────────────────── */
+
+.lg-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+}
+
+.lg-radio-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.lg-radio-circle {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  will-change: transform;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.lg-radio-dot {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.lg-radio-dot-inner {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow:
+    0 0 6px rgba(255, 255, 255, 0.9),
+    0 0 12px rgba(255, 255, 255, 0.4);
+}
+
+.lg-radio-label-text {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.03em;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* ── File Upload ─────────────────────────────────────────────── */
+
+.lg-file-upload {
+  position: relative;
+  width: min(340px, 100%);
+  height: 160px;
+  border-radius: 16px;
+  will-change: transform;
+  cursor: pointer;
+}
+
+.lg-file-upload-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  pointer-events: none;
+  gap: 8px;
+  padding: 20px;
+  text-align: center;
+}
+
+.lg-file-upload-icon {
+  color: rgba(255, 255, 255, 0.55);
+  transition: color 0.2s ease;
+  line-height: 0;
+}
+
+.lg-file-upload-drag .lg-file-upload-icon {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.lg-file-upload-text {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.45);
+  letter-spacing: 0.02em;
+  transition: color 0.2s ease;
+}
+
+.lg-file-upload-drag .lg-file-upload-text {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.lg-file-upload-filename {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #fff;
+  word-break: break-all;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+}
+
+.lg-file-upload-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 10;
+  font-size: 0;
+}
+
+/* ── Date Picker ─────────────────────────────────────────────── */
+
+.lg-datepicker-wrapper {
+  position: relative;
+  width: min(340px, 100%);
+  height: 60px;
+  will-change: transform;
+  cursor: pointer;
+  overflow: visible;
+}
+
+.lg-datepicker-display {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.lg-datepicker-value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.03em;
+}
+
+.lg-datepicker-placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.lg-datepicker-icon {
+  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.lg-datepicker-popup {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  width: 304px;
+  background: rgba(10, 10, 15, 0.72);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 16px;
+  padding: 16px;
+  z-index: 100;
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transform-origin: top left;
+  will-change: opacity, transform;
+}
+
+.lg-datepicker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.lg-datepicker-nav {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  line-height: 0;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.lg-datepicker-nav:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.lg-datepicker-month-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  cursor: default;
+}
+
+.lg-datepicker-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 4px;
+}
+
+.lg-datepicker-weekdays span {
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.35);
+  padding: 4px 0;
+  letter-spacing: 0.05em;
+}
+
+.lg-datepicker-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.lg-datepicker-day {
+  background: none;
+  border: none;
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 2px;
+  border-radius: 8px;
+  text-align: center;
+  line-height: 1.6;
+  transition: background 0.12s ease;
+}
+
+.lg-datepicker-day:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.lg-datepicker-day-today {
+  color: var(--lg-accent-2);
+  font-weight: 700;
+}
+
+.lg-datepicker-day-selected {
+  background: rgba(59, 130, 246, 0.45) !important;
+  color: #fff;
+  font-weight: 700;
+}
+
+.lg-datepicker-day-other {
+  color: rgba(255, 255, 255, 0.18);
+}
+
+.lg-datepicker-day-disabled {
+  color: rgba(255, 255, 255, 0.15);
+  cursor: not-allowed;
+}
+
 /* ── Dial ───────────────────────────────────────────────────── */
 
 .lg-dial {

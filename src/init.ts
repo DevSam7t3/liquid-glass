@@ -8,6 +8,9 @@ import {
   createLiquidTextarea,
   createLiquidSelect,
   createLiquidCheckbox,
+  createLiquidRadio,
+  createLiquidFileUpload,
+  createLiquidDatePicker,
   createLiquidDial,
   createLiquidProgress,
 } from './components.js';
@@ -23,6 +26,9 @@ import type {
   LiquidTextareaOptions,
   LiquidSelectOptions,
   LiquidCheckboxOptions,
+  LiquidRadioOptions,
+  LiquidFileUploadOptions,
+  LiquidDatePickerOptions,
   LiquidDialOptions,
   LiquidProgressOptions,
 } from './types.js';
@@ -46,11 +52,13 @@ function parseDataset(ds: DOMStringMap): Record<string, unknown> {
   str('type');
   str('profile');
   str('filterMode');
+  str('accept');
+  str('min');
+  str('max');
   bool('checked');
-  num('min');
-  num('max');
+  bool('multiple');
   // Parse value as a number when it looks numeric, otherwise keep as string
-  // (needed so select data-value="opt-id" works alongside slider data-value="50")
+  // (needed so select/radio data-value="opt-id" works alongside slider data-value="50")
   if (ds['value'] != null) {
     const n = parseFloat(ds['value'] as string);
     out['value'] = isNaN(n) ? ds['value'] : n;
@@ -80,6 +88,10 @@ function parseDataset(ds: DOMStringMap): Record<string, unknown> {
  * <div    data-liquid-glass   data-bezel-width="24"></div>
  * <div    data-liquid-cursor></div>
  * <div    data-liquid-input   data-placeholder="Search…"></div>
+ * <div    data-liquid-search  data-placeholder="Search…" data-debounce="300"></div>
+ * <div    data-liquid-datepicker data-placeholder="Pick a date" data-min="2025-01-01"></div>
+ * <div    data-liquid-radio></div>
+ * <div    data-liquid-file-upload data-accept="image/*" data-multiple="true"></div>
  * <div    data-liquid-dial    data-value="0"></div>
  * <div    data-liquid-progress data-value="40"></div>
  * ```
@@ -121,6 +133,13 @@ export function init(options: InitOptions = {}): AnyHandle[] {
   apply('[data-liquid-select]', (el, opts) => createLiquidSelect(el, opts as LiquidSelectOptions));
   apply('[data-liquid-checkbox]', (el, opts) =>
     createLiquidCheckbox(el, opts as LiquidCheckboxOptions),
+  );
+  apply('[data-liquid-radio]', (el, opts) => createLiquidRadio(el, opts as LiquidRadioOptions));
+  apply('[data-liquid-file-upload]', (el, opts) =>
+    createLiquidFileUpload(el, opts as LiquidFileUploadOptions),
+  );
+  apply('[data-liquid-datepicker]', (el, opts) =>
+    createLiquidDatePicker(el, opts as LiquidDatePickerOptions),
   );
   apply('[data-liquid-dial]', (el, opts) => createLiquidDial(el, opts as LiquidDialOptions));
   apply('[data-liquid-progress]', (el, opts) =>

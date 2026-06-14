@@ -28,6 +28,16 @@ import type {
   LiquidCheckboxHandle,
   LiquidCheckboxEventMap,
   LiquidCheckboxOptions,
+  LiquidRadioHandle,
+  LiquidRadioEventMap,
+  LiquidRadioOptions,
+  LiquidRadioOption,
+  LiquidFileUploadHandle,
+  LiquidFileUploadEventMap,
+  LiquidFileUploadOptions,
+  LiquidDatePickerHandle,
+  LiquidDatePickerEventMap,
+  LiquidDatePickerOptions,
   LiquidDialHandle,
   LiquidDialEventMap,
   LiquidDialOptions,
@@ -1724,5 +1734,777 @@ export function createLiquidProgress(
   );
 
   af = requestAnimationFrame(loop);
+  return handle;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Liquid Radio
+// ─────────────────────────────────────────────────────────────────────────────
+
+class LiquidRadioHandleImpl extends EventEmitter<LiquidRadioEventMap> implements LiquidRadioHandle {
+  readonly element: Element;
+  private _value: string;
+  private readonly _setValue: (v: string) => void;
+  private readonly _setOptions: (opts: LiquidRadioOption[]) => void;
+  private readonly _cleanup: () => void;
+
+  constructor(
+    element: Element,
+    value: string,
+    setValue: (v: string) => void,
+    setOptions: (opts: LiquidRadioOption[]) => void,
+    cleanup: () => void,
+  ) {
+    super();
+    this.element = element;
+    this._value = value;
+    this._setValue = setValue;
+    this._setOptions = setOptions;
+    this._cleanup = cleanup;
+  }
+
+  get value(): string {
+    return this._value;
+  }
+  set value(v: string) {
+    this._setValue(v);
+  }
+  /** @internal */ _syncValue(v: string) {
+    this._value = v;
+  }
+  setOptions(opts: LiquidRadioOption[]): this {
+    this._setOptions(opts);
+    return this;
+  }
+  destroy(): void {
+    this._cleanup();
+    this._emit('destroy');
+  }
+}
+
+interface RadioItem {
+  optEl: HTMLElement;
+  glass: LiquidGlassHandle;
+  dot: HTMLElement;
+  sp: Spring;
+  af: number | null;
+  ev: ReturnType<typeof makeCleanupTracker>;
+  optValue: string;
+  kick: () => void;
+}
+
+/**
+ * Glass radio-button group with spring-animated selection dot.
+ */
+export function createLiquidRadio(
+  target: string | Element,
+  options: LiquidRadioOptions = {},
+): LiquidRadioHandle {
+  const el = resolveEl(target);
+  const { options: initOpts = [], value: initVal = '', ...glassOpts } = options;
+
+  el.classList.add('lg-radio-group');
+
+  let currentValue = initVal;
+  let items: RadioItem[] = [];
+
+  function destroyItems() {
+    items.forEach(({ glass, ev: iev, af: iaf }) => {
+      if (iaf !== null) cancelAnimationFrame(iaf);
+      glass.destroy();
+      iev.runAll();
+    });
+    items = [];
+    el.querySelectorAll('.lg-radio-item').forEach((e) => e.remove());
+  }
+
+  function selectValue(v: string, emit = true) {
+    currentValue = v;
+    handle._syncValue(v);
+    items.forEach((item) => {
+      item.optEl.setAttribute('aria-checked', item.optValue === v ? 'true' : 'false');
+      item.kick();
+    });
+    if (emit) handle._emit('change', { value: v, element: el });
+  }
+
+  function buildItems(opts: LiquidRadioOption[]) {
+    destroyItems();
+    opts.forEach((opt, i) => {
+      const optEl = document.createElement('div');
+      optEl.className = 'lg-radio-item';
+      optEl.setAttribute('role', 'radio');
+      optEl.setAttribute('tabindex', i === 0 ? '0' : '-1');
+      optEl.setAttribute('aria-checked', opt.value === currentValue ? 'true' : 'false');
+      optEl.dataset.value = opt.value;
+
+      const circle = document.createElement('div');
+      circle.className = 'lg-radio-circle';
+
+      const dot = document.createElement('div');
+      dot.className = 'lg-radio-dot';
+      const dotInner = document.createElement('div');
+      dotInner.className = 'lg-radio-dot-inner';
+      dot.appendChild(dotInner);
+      circle.appendChild(dot);
+
+      const labelSpan = document.createElement('span');
+      labelSpan.className = 'lg-radio-label-text';
+      labelSpan.textContent = opt.label;
+
+      optEl.appendChild(circle);
+      optEl.appendChild(labelSpan);
+      el.appendChild(optEl);
+
+      const glass = createLiquidGlass(circle, {
+        width: 28,
+        height: 28,
+        radius: 14,
+        bezelWidth: 7,
+        glassThickness: 40,
+        refractiveIndex: 1.4,
+        blur: 0.3,
+        saturation: 1.1,
+        specularSlope: 0.5,
+        ...glassOpts,
+      });
+
+      const isSelected = opt.value === currentValue;
+      const sp = new Spring(isSelected ? 1 : 0, 500, 22);
+      let iaf: number | null = null;
+
+      dot.style.transform = `scale(${isSelected ? 1 : 0})`;
+      dot.style.opacity = isSelected ? '1' : '0';
+
+      function loop() {
+        sp.setTarget(opt.value === currentValue ? 1 : 0);
+        const v = sp.update(DT);
+        dot.style.transform = `scale(${v})`;
+        dot.style.opacity = String(Math.max(0, Math.min(1, v)));
+        if (!sp.isSettled()) iaf = requestAnimationFrame(loop);
+        else iaf = null;
+      }
+      function kick() {
+        if (!iaf) iaf = requestAnimationFrame(loop);
+      }
+
+      const itemEv = makeCleanupTracker();
+      itemEv.add(optEl, 'click', () => {
+        if (currentValue !== opt.value) selectValue(opt.value);
+      });
+      itemEv.add(optEl, 'keydown', (e: Event) => {
+        const ke = e as KeyboardEvent;
+        if (ke.key === ' ' || ke.key === 'Enter') {
+          ke.preventDefault();
+          if (currentValue !== opt.value) selectValue(opt.value);
+        }
+        if (ke.key === 'ArrowDown' || ke.key === 'ArrowRight') {
+          ke.preventDefault();
+          const next = items[(i + 1) % items.length];
+          next.optEl.setAttribute('tabindex', '0');
+          optEl.setAttribute('tabindex', '-1');
+          next.optEl.focus();
+        }
+        if (ke.key === 'ArrowUp' || ke.key === 'ArrowLeft') {
+          ke.preventDefault();
+          const prev = items[(i - 1 + items.length) % items.length];
+          prev.optEl.setAttribute('tabindex', '0');
+          optEl.setAttribute('tabindex', '-1');
+          prev.optEl.focus();
+        }
+      });
+
+      items.push({ optEl, glass, dot, sp, af: iaf, ev: itemEv, optValue: opt.value, kick });
+    });
+  }
+
+  const handle = new LiquidRadioHandleImpl(
+    el,
+    currentValue,
+    (v) => selectValue(v, false),
+    buildItems,
+    () => {
+      destroyItems();
+      el.classList.remove('lg-radio-group');
+    },
+  );
+
+  buildItems(initOpts);
+  return handle;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Liquid File Upload
+// ─────────────────────────────────────────────────────────────────────────────
+
+class LiquidFileUploadHandleImpl
+  extends EventEmitter<LiquidFileUploadEventMap>
+  implements LiquidFileUploadHandle
+{
+  readonly element: Element;
+  private readonly _getFiles: () => FileList | null;
+  private readonly _clearFn: () => void;
+  private readonly _cleanup: () => void;
+
+  constructor(
+    element: Element,
+    getFiles: () => FileList | null,
+    clearFn: () => void,
+    cleanup: () => void,
+  ) {
+    super();
+    this.element = element;
+    this._getFiles = getFiles;
+    this._clearFn = clearFn;
+    this._cleanup = cleanup;
+  }
+
+  get files(): FileList | null {
+    return this._getFiles();
+  }
+  clear(): this {
+    this._clearFn();
+    return this;
+  }
+  destroy(): void {
+    this._cleanup();
+    this._emit('destroy');
+  }
+}
+
+/**
+ * Glass-wrapped file-upload dropzone with drag-and-drop support.
+ */
+export function createLiquidFileUpload(
+  target: string | Element,
+  options: LiquidFileUploadOptions = {},
+): LiquidFileUploadHandle {
+  const el = resolveEl(target);
+  const {
+    accept = '',
+    multiple = false,
+    placeholder = 'Drop files here or click to browse',
+    ...glassOpts
+  } = options;
+
+  el.classList.add('lg-file-upload');
+
+  const content = document.createElement('div');
+  content.className = 'lg-file-upload-content';
+
+  const iconEl = document.createElement('div');
+  iconEl.className = 'lg-file-upload-icon';
+  iconEl.innerHTML =
+    '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+    'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
+    '<polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/>' +
+    '<path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>';
+
+  const textEl = document.createElement('div');
+  textEl.className = 'lg-file-upload-text';
+  textEl.textContent = placeholder;
+
+  const filenameEl = document.createElement('div');
+  filenameEl.className = 'lg-file-upload-filename';
+  filenameEl.style.display = 'none';
+
+  content.appendChild(iconEl);
+  content.appendChild(textEl);
+  content.appendChild(filenameEl);
+  el.appendChild(content);
+
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.className = 'lg-file-upload-input';
+  if (accept) input.accept = accept;
+  if (multiple) input.multiple = true;
+  el.appendChild(input);
+
+  const glass = createLiquidGlass(el, {
+    width: 340,
+    height: 160,
+    radius: 16,
+    bezelWidth: 18,
+    glassThickness: 60,
+    refractiveIndex: 1.4,
+    blur: 0.5,
+    saturation: 1.2,
+    specularSlope: 0.6,
+    ...glassOpts,
+  }) as InternalGlass;
+
+  const sp = new Spring(1, 400, 20);
+  let af: number | null = null;
+
+  function loop() {
+    sp.setTarget(1);
+    const s = sp.update(DT);
+    (el as HTMLElement).style.transform = `scale(${s})`;
+    glass._setScale(glass._getMaxDisp() * s);
+    if (!sp.isSettled()) af = requestAnimationFrame(loop);
+    else af = null;
+  }
+  function kick() {
+    if (!af) af = requestAnimationFrame(loop);
+  }
+
+  let currentFiles: FileList | null = null;
+
+  function showFiles(files: FileList | null) {
+    currentFiles = files;
+    if (files && files.length > 0) {
+      filenameEl.textContent = Array.from(files)
+        .map((f) => f.name)
+        .join(', ');
+      filenameEl.style.display = 'block';
+    } else {
+      filenameEl.textContent = '';
+      filenameEl.style.display = 'none';
+    }
+  }
+
+  const handle = new LiquidFileUploadHandleImpl(
+    el,
+    () => currentFiles,
+    () => {
+      showFiles(null);
+      input.value = '';
+    },
+    () => {
+      if (af !== null) cancelAnimationFrame(af);
+      glass.destroy();
+      ev.runAll();
+      content.remove();
+      input.remove();
+      el.classList.remove('lg-file-upload');
+      (el as HTMLElement).style.transform = '';
+    },
+  );
+
+  const ev = makeCleanupTracker();
+  ev.add(input, 'change', () => {
+    showFiles(input.files);
+    if (input.files && input.files.length > 0)
+      handle._emit('change', { files: input.files, element: el });
+  });
+
+  let dragDepth = 0;
+  ev.add(el, 'dragenter', (e: Event) => {
+    e.preventDefault();
+    if (++dragDepth === 1) {
+      el.classList.add('lg-file-upload-drag');
+      sp.setTarget(1.04);
+      kick();
+    }
+  });
+  ev.add(el, 'dragleave', () => {
+    if (--dragDepth <= 0) {
+      dragDepth = 0;
+      el.classList.remove('lg-file-upload-drag');
+      sp.setTarget(1);
+      kick();
+    }
+  });
+  ev.add(el, 'dragover', (e: Event) => e.preventDefault());
+  ev.add(el, 'drop', (e: Event) => {
+    e.preventDefault();
+    dragDepth = 0;
+    el.classList.remove('lg-file-upload-drag');
+    sp.setTarget(1);
+    kick();
+    const files = (e as DragEvent).dataTransfer?.files ?? null;
+    if (files && files.length > 0) {
+      showFiles(files);
+      handle._emit('change', { files, element: el });
+    }
+  });
+
+  return handle;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Liquid Date Picker
+// ─────────────────────────────────────────────────────────────────────────────
+
+const DP_MONTHS = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
+const DP_DAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+
+function dpParseISO(s: string): Date | null {
+  if (!s) return null;
+  const m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!m) return null;
+  const d = new Date(parseInt(m[1]), parseInt(m[2]) - 1, parseInt(m[3]));
+  return isNaN(d.getTime()) ? null : d;
+}
+
+function dpFormatISO(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+function dpFormatDisplay(d: Date): string {
+  return `${DP_MONTHS[d.getMonth()].slice(0, 3)} ${d.getDate()}, ${d.getFullYear()}`;
+}
+
+class LiquidDatePickerHandleImpl
+  extends EventEmitter<LiquidDatePickerEventMap>
+  implements LiquidDatePickerHandle
+{
+  readonly element: Element;
+  private _date: Date | null;
+  private readonly _setDate: (d: Date | null) => void;
+  private readonly _open: () => void;
+  private readonly _close: () => void;
+  private readonly _cleanup: () => void;
+
+  constructor(
+    element: Element,
+    date: Date | null,
+    setDate: (d: Date | null) => void,
+    openFn: () => void,
+    closeFn: () => void,
+    cleanup: () => void,
+  ) {
+    super();
+    this.element = element;
+    this._date = date;
+    this._setDate = setDate;
+    this._open = openFn;
+    this._close = closeFn;
+    this._cleanup = cleanup;
+  }
+
+  get value(): string {
+    return this._date ? dpFormatISO(this._date) : '';
+  }
+  set value(s: string) {
+    this._setDate(dpParseISO(s));
+  }
+  get date(): Date | null {
+    return this._date;
+  }
+  set date(d: Date | null) {
+    this._setDate(d);
+  }
+  /** @internal */ _syncDate(d: Date | null) {
+    this._date = d;
+  }
+  open(): this {
+    this._open();
+    return this;
+  }
+  close(): this {
+    this._close();
+    return this;
+  }
+  destroy(): void {
+    this._cleanup();
+    this._emit('destroy');
+  }
+}
+
+/**
+ * Glass-wrapped date picker with animated calendar popup.
+ */
+export function createLiquidDatePicker(
+  target: string | Element,
+  options: LiquidDatePickerOptions = {},
+): LiquidDatePickerHandle {
+  const el = resolveEl(target);
+  const {
+    value: initVal = '',
+    placeholder = 'Select date',
+    min: minStr = '',
+    max: maxStr = '',
+    ...glassOpts
+  } = options;
+
+  const minDate = dpParseISO(minStr);
+  const maxDate = dpParseISO(maxStr);
+  let selectedDate: Date | null = dpParseISO(initVal);
+
+  el.classList.add('lg-datepicker-wrapper');
+
+  const display = document.createElement('div');
+  display.className = 'lg-datepicker-display';
+  display.setAttribute('aria-haspopup', 'true');
+  display.setAttribute('aria-expanded', 'false');
+
+  const valueSpan = document.createElement('span');
+  valueSpan.className = selectedDate
+    ? 'lg-datepicker-value'
+    : 'lg-datepicker-value lg-datepicker-placeholder';
+  valueSpan.textContent = selectedDate ? dpFormatDisplay(selectedDate) : placeholder;
+
+  const calIcon = document.createElement('span');
+  calIcon.className = 'lg-datepicker-icon';
+  calIcon.setAttribute('aria-hidden', 'true');
+  calIcon.innerHTML =
+    '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+    'stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+    '<rect x="3" y="4" width="18" height="18" rx="2"/>' +
+    '<line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>' +
+    '<line x1="3" y1="10" x2="21" y2="10"/></svg>';
+
+  display.appendChild(valueSpan);
+  display.appendChild(calIcon);
+  el.appendChild(display);
+
+  const popup = document.createElement('div');
+  popup.className = 'lg-datepicker-popup';
+  popup.style.display = 'none';
+  popup.style.opacity = '0';
+  popup.setAttribute('role', 'dialog');
+  popup.setAttribute('aria-label', 'Date picker');
+
+  const dpHeader = document.createElement('div');
+  dpHeader.className = 'lg-datepicker-header';
+
+  const prevBtn = document.createElement('button');
+  prevBtn.type = 'button';
+  prevBtn.className = 'lg-datepicker-nav';
+  prevBtn.setAttribute('aria-label', 'Previous month');
+  prevBtn.innerHTML =
+    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+    'stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">' +
+    '<polyline points="15 18 9 12 15 6"/></svg>';
+
+  const monthBtn = document.createElement('button');
+  monthBtn.type = 'button';
+  monthBtn.className = 'lg-datepicker-month-btn';
+
+  const nextBtn = document.createElement('button');
+  nextBtn.type = 'button';
+  nextBtn.className = 'lg-datepicker-nav';
+  nextBtn.setAttribute('aria-label', 'Next month');
+  nextBtn.innerHTML =
+    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+    'stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">' +
+    '<polyline points="9 18 15 12 9 6"/></svg>';
+
+  dpHeader.appendChild(prevBtn);
+  dpHeader.appendChild(monthBtn);
+  dpHeader.appendChild(nextBtn);
+  popup.appendChild(dpHeader);
+
+  const weekdaysRow = document.createElement('div');
+  weekdaysRow.className = 'lg-datepicker-weekdays';
+  DP_DAYS.forEach((d) => {
+    const s = document.createElement('span');
+    s.textContent = d;
+    weekdaysRow.appendChild(s);
+  });
+  popup.appendChild(weekdaysRow);
+
+  const daysGrid = document.createElement('div');
+  daysGrid.className = 'lg-datepicker-days';
+  popup.appendChild(daysGrid);
+
+  el.appendChild(popup);
+
+  const glass = createLiquidGlass(el, {
+    width: 340,
+    height: 60,
+    radius: 16,
+    bezelWidth: 15,
+    glassThickness: 60,
+    refractiveIndex: 1.5,
+    blur: 0.5,
+    saturation: 1.2,
+    specularSlope: 0.7,
+    ...glassOpts,
+  }) as InternalGlass;
+
+  const sp = new Spring(1, 400, 20);
+  let af: number | null = null;
+  const popupSp = new Spring(0, 500, 25);
+  let popupAf: number | null = null;
+  let isOpen = false;
+
+  function loop() {
+    sp.setTarget(1);
+    const s = sp.update(DT);
+    (el as HTMLElement).style.transform = `scale(${s})`;
+    glass._setScale(glass._getMaxDisp() * s);
+    if (!sp.isSettled()) af = requestAnimationFrame(loop);
+    else af = null;
+  }
+  function kick() {
+    if (!af) af = requestAnimationFrame(loop);
+  }
+
+  function popupLoop() {
+    popupSp.setTarget(isOpen ? 1 : 0);
+    const v = popupSp.update(DT);
+    popup.style.opacity = String(Math.max(0, v));
+    popup.style.transform = `translateY(${(1 - v) * -6}px) scale(${0.97 + 0.03 * v})`;
+    if (v < 0.005 && !isOpen) popup.style.display = 'none';
+    if (!popupSp.isSettled()) popupAf = requestAnimationFrame(popupLoop);
+    else popupAf = null;
+  }
+  function kickPopup() {
+    if (!popupAf) popupAf = requestAnimationFrame(popupLoop);
+  }
+
+  const viewDate = new Date();
+  if (selectedDate) viewDate.setFullYear(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
+  else viewDate.setDate(1);
+
+  let cellEv = makeCleanupTracker();
+
+  function renderCalendar() {
+    cellEv.runAll();
+    cellEv = makeCleanupTracker();
+    daysGrid.innerHTML = '';
+
+    const year = viewDate.getFullYear();
+    const month = viewDate.getMonth();
+    monthBtn.textContent = `${DP_MONTHS[month]} ${year}`;
+
+    const firstWeekday = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const daysInPrev = new Date(year, month, 0).getDate();
+    const today = new Date();
+
+    for (let i = 0; i < firstWeekday; i++) {
+      const cell = document.createElement('button');
+      cell.type = 'button';
+      cell.className = 'lg-datepicker-day lg-datepicker-day-other';
+      cell.textContent = String(daysInPrev - firstWeekday + i + 1);
+      cell.disabled = true;
+      daysGrid.appendChild(cell);
+    }
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      const cell = document.createElement('button');
+      cell.type = 'button';
+      cell.className = 'lg-datepicker-day';
+      cell.textContent = String(d);
+      const cellDate = new Date(year, month, d);
+      if (cellDate.toDateString() === today.toDateString())
+        cell.classList.add('lg-datepicker-day-today');
+      if (selectedDate && cellDate.toDateString() === selectedDate.toDateString())
+        cell.classList.add('lg-datepicker-day-selected');
+      if ((minDate && cellDate < minDate) || (maxDate && cellDate > maxDate)) {
+        cell.disabled = true;
+        cell.classList.add('lg-datepicker-day-disabled');
+      }
+      cellEv.add(cell, 'click', () => {
+        selectedDate = new Date(year, month, d);
+        valueSpan.textContent = dpFormatDisplay(selectedDate);
+        valueSpan.className = 'lg-datepicker-value';
+        handle._syncDate(selectedDate);
+        renderCalendar();
+        closePopup();
+        handle._emit('change', {
+          date: selectedDate,
+          value: dpFormatISO(selectedDate),
+          element: el,
+        });
+      });
+      daysGrid.appendChild(cell);
+    }
+
+    const total = Math.ceil((firstWeekday + daysInMonth) / 7) * 7;
+    for (let d = 1; d <= total - firstWeekday - daysInMonth; d++) {
+      const cell = document.createElement('button');
+      cell.type = 'button';
+      cell.className = 'lg-datepicker-day lg-datepicker-day-other';
+      cell.textContent = String(d);
+      cell.disabled = true;
+      daysGrid.appendChild(cell);
+    }
+  }
+
+  function openPopup() {
+    if (isOpen) return;
+    isOpen = true;
+    popup.style.display = 'block';
+    renderCalendar();
+    display.setAttribute('aria-expanded', 'true');
+    sp.setTarget(1.02);
+    kick();
+    kickPopup();
+    handle._emit('open', undefined);
+  }
+
+  function closePopup() {
+    if (!isOpen) return;
+    isOpen = false;
+    display.setAttribute('aria-expanded', 'false');
+    sp.setTarget(1);
+    kick();
+    kickPopup();
+    handle._emit('close', undefined);
+  }
+
+  const onDocClick = (e: Event) => {
+    if (!el.contains(e.target as Node)) closePopup();
+  };
+  document.addEventListener('click', onDocClick);
+
+  const handle = new LiquidDatePickerHandleImpl(
+    el,
+    selectedDate,
+    (d) => {
+      selectedDate = d;
+      handle._syncDate(d);
+      valueSpan.textContent = d ? dpFormatDisplay(d) : placeholder;
+      valueSpan.className = d
+        ? 'lg-datepicker-value'
+        : 'lg-datepicker-value lg-datepicker-placeholder';
+      if (d) viewDate.setFullYear(d.getFullYear(), d.getMonth(), 1);
+      if (isOpen) renderCalendar();
+    },
+    openPopup,
+    closePopup,
+    () => {
+      if (af !== null) cancelAnimationFrame(af);
+      if (popupAf !== null) cancelAnimationFrame(popupAf);
+      document.removeEventListener('click', onDocClick);
+      glass.destroy();
+      cellEv.runAll();
+      ev.runAll();
+      display.remove();
+      popup.remove();
+      el.classList.remove('lg-datepicker-wrapper');
+      (el as HTMLElement).style.transform = '';
+    },
+  );
+
+  const ev = makeCleanupTracker();
+  ev.add(el, 'click', (e: Event) => {
+    if (popup.contains(e.target as Node)) return;
+    if (isOpen) {
+      closePopup();
+    } else {
+      openPopup();
+    }
+  });
+  ev.add(prevBtn, 'click', (e: Event) => {
+    e.stopPropagation();
+    viewDate.setMonth(viewDate.getMonth() - 1);
+    renderCalendar();
+  });
+  ev.add(nextBtn, 'click', (e: Event) => {
+    e.stopPropagation();
+    viewDate.setMonth(viewDate.getMonth() + 1);
+    renderCalendar();
+  });
+  ev.add(monthBtn, 'click', (e: Event) => e.stopPropagation());
+  ev.add(popup, 'click', (e: Event) => e.stopPropagation());
+
   return handle;
 }

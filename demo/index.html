@@ -256,6 +256,18 @@
         flex-direction: column;
         gap: 1.2rem;
       }
+      #s-radio {
+        background: radial-gradient(circle at 50% 50%, #0e1a2e, #030508);
+        flex-direction: column;
+        gap: 1.2rem;
+      }
+      #s-fileupload {
+        background: radial-gradient(circle at 50% 50%, #101a12, #030705);
+      }
+      #s-datepicker {
+        background: radial-gradient(circle at 50% 50%, #1a1208, #060400);
+        overflow: visible;
+      }
 
       /* Lens */
       .lens-content {
@@ -839,6 +851,58 @@
           <span class="muted">Click a checkbox…</span>
         </div>
       </article>
+
+      <!-- ── 15: Radio ──────────────────────────────────────── -->
+      <article class="exhibit span-4">
+        <div class="exhibit-info">
+          <span class="exhibit-no">15</span>
+          <h2 class="exhibit-title">Radio Group</h2>
+          <p class="exhibit-desc">Exclusive glass radio buttons with spring-animated selection dot and keyboard navigation.</p>
+        </div>
+        <div class="stage" id="s-radio">
+          <div class="orb" style="background: #3b82f6; width: 280px; height: 280px; top: 50%; left: 50%; transform: translate(-50%, -50%)"></div>
+          <div id="radioGroup"></div>
+        </div>
+        <div class="event-log" id="radioLog">
+          <span class="muted">Select an option…</span>
+        </div>
+      </article>
+
+      <!-- ── 16: File Upload ────────────────────────────────── -->
+      <article class="exhibit span-6">
+        <div class="exhibit-info">
+          <span class="exhibit-no">16</span>
+          <h2 class="exhibit-title">File Upload</h2>
+          <p class="exhibit-desc">Glass-wrapped dropzone with click-to-browse and drag-and-drop support.</p>
+        </div>
+        <div class="stage" id="s-fileupload">
+          <div class="orb" style="background: #10b981; width: 340px; height: 340px; top: 50%; left: 50%; transform: translate(-50%, -50%)"></div>
+          <div class="orb" style="background: #06b6d4; width: 160px; height: 160px; bottom: 10%; right: 8%"></div>
+          <div id="fileUpload"></div>
+        </div>
+        <div class="event-log" id="fileLog">
+          <span class="muted">Drop or select a file…</span>
+        </div>
+      </article>
+
+
+      <!-- ── 18: Date Picker ────────────────────────────────── -->
+      <article class="exhibit span-4">
+        <div class="exhibit-info">
+          <span class="exhibit-no">18</span>
+          <h2 class="exhibit-title">Date Picker</h2>
+          <p class="exhibit-desc">Glass trigger that opens an animated calendar popup. Click outside to dismiss.</p>
+        </div>
+        <div class="stage" id="s-datepicker">
+          <div class="orb" style="background: #f59e0b; width: 300px; height: 300px; top: 50%; left: 50%; transform: translate(-50%, -70%)"></div>
+          <div class="orb" style="background: #ef4444; width: 140px; height: 140px; bottom: 15%; right: 5%"></div>
+          <div id="datePicker"></div>
+        </div>
+        <div class="event-log" id="dateLog">
+          <span class="muted">Pick a date…</span>
+        </div>
+      </article>
+
     </main>
 
     <!-- ══════════════════════════════════════════════ SCRIPTS -->
@@ -866,6 +930,9 @@
         createLiquidTextarea,
         createLiquidSelect,
         createLiquidCheckbox,
+        createLiquidRadio,
+        createLiquidFileUpload,
+        createLiquidDatePicker,
         createLiquidDial,
         createLiquidTooltip,
         createLiquidProgress,
@@ -1133,6 +1200,42 @@
         'change',
         ({ checked }) => log(cbLog, `analytics → ${checked}`),
       );
+
+      // ── 15  Radio ────────────────────────────────────────────────────────────────
+      const radioLog = document.getElementById('radioLog');
+      createLiquidRadio('#radioGroup', {
+        options: [
+          { value: 'aurora', label: 'Aurora' },
+          { value: 'midnight', label: 'Midnight' },
+          { value: 'sunset', label: 'Sunset' },
+        ],
+        value: 'aurora',
+      }).on('change', ({ value }) => log(radioLog, `change → "${value}"`));
+
+      // ── 16  File Upload ───────────────────────────────────────────────────────────
+      const fuLog = document.getElementById('fileLog');
+      createLiquidFileUpload('#fileUpload', {
+        multiple: true,
+        accept: 'image/*',
+        placeholder: 'Drop images here or click to browse',
+      }).on('change', ({ files }) => {
+        const names = Array.from(files)
+          .map((f) => f.name)
+          .join(', ');
+        log(fuLog, `change → ${files.length} file(s): ${names}`);
+      });
+
+
+      // ── 18  Date Picker ───────────────────────────────────────────────────────────
+      const dpLog = document.getElementById('dateLog');
+      createLiquidDatePicker('#datePicker', {
+        placeholder: 'Select a date',
+        min: '2020-01-01',
+        max: '2030-12-31',
+      })
+        .on('change', ({ value }) => log(dpLog, `change → ${value}`))
+        .on('open', () => log(dpLog, 'opened'))
+        .on('close', () => log(dpLog, 'closed'));
     </script>
   </body>
 </html>

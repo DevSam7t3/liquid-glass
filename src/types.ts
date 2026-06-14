@@ -500,6 +500,119 @@ export interface LiquidProgressHandle {
   destroy(): void;
 }
 
+// ─── Radio ────────────────────────────────────────────────────────────────────
+
+export interface LiquidRadioOption {
+  value: string;
+  label: string;
+}
+
+export interface LiquidRadioEventMap {
+  change: { value: string; element: Element };
+  destroy: undefined;
+}
+
+export interface LiquidRadioOptions extends GlassOptions {
+  options?: LiquidRadioOption[];
+  value?: string;
+}
+
+/** Returned by `createLiquidRadio()`. */
+export interface LiquidRadioHandle {
+  readonly element: Element;
+  on<K extends keyof LiquidRadioEventMap>(
+    event: K,
+    fn: (payload: LiquidRadioEventMap[K]) => void,
+  ): this;
+  off<K extends keyof LiquidRadioEventMap>(
+    event: K,
+    fn?: (payload: LiquidRadioEventMap[K]) => void,
+  ): this;
+  once<K extends keyof LiquidRadioEventMap>(
+    event: K,
+    fn: (payload: LiquidRadioEventMap[K]) => void,
+  ): this;
+  value: string;
+  setOptions(opts: LiquidRadioOption[]): this;
+  destroy(): void;
+}
+
+// ─── File Upload ──────────────────────────────────────────────────────────────
+
+export interface LiquidFileUploadEventMap {
+  change: { files: FileList; element: Element };
+  destroy: undefined;
+}
+
+export interface LiquidFileUploadOptions extends GlassOptions {
+  accept?: string;
+  multiple?: boolean;
+  placeholder?: string;
+}
+
+/** Returned by `createLiquidFileUpload()`. */
+export interface LiquidFileUploadHandle {
+  readonly element: Element;
+  on<K extends keyof LiquidFileUploadEventMap>(
+    event: K,
+    fn: (payload: LiquidFileUploadEventMap[K]) => void,
+  ): this;
+  off<K extends keyof LiquidFileUploadEventMap>(
+    event: K,
+    fn?: (payload: LiquidFileUploadEventMap[K]) => void,
+  ): this;
+  once<K extends keyof LiquidFileUploadEventMap>(
+    event: K,
+    fn: (payload: LiquidFileUploadEventMap[K]) => void,
+  ): this;
+  readonly files: FileList | null;
+  clear(): this;
+  destroy(): void;
+}
+
+// ─── Date Picker ──────────────────────────────────────────────────────────────
+
+export interface LiquidDatePickerEventMap {
+  change: { date: Date | null; value: string; element: Element };
+  open: undefined;
+  close: undefined;
+  destroy: undefined;
+}
+
+export interface LiquidDatePickerOptions extends GlassOptions {
+  /** Initial selected date as an ISO string `YYYY-MM-DD`. */
+  value?: string;
+  placeholder?: string;
+  /** Minimum selectable date as `YYYY-MM-DD`. */
+  min?: string;
+  /** Maximum selectable date as `YYYY-MM-DD`. */
+  max?: string;
+}
+
+/** Returned by `createLiquidDatePicker()`. */
+export interface LiquidDatePickerHandle {
+  readonly element: Element;
+  on<K extends keyof LiquidDatePickerEventMap>(
+    event: K,
+    fn: (payload: LiquidDatePickerEventMap[K]) => void,
+  ): this;
+  off<K extends keyof LiquidDatePickerEventMap>(
+    event: K,
+    fn?: (payload: LiquidDatePickerEventMap[K]) => void,
+  ): this;
+  once<K extends keyof LiquidDatePickerEventMap>(
+    event: K,
+    fn: (payload: LiquidDatePickerEventMap[K]) => void,
+  ): this;
+  /** ISO date string `YYYY-MM-DD`, or `''` when nothing is selected. */
+  value: string;
+  /** The selected `Date` object, or `null` when nothing is selected. */
+  date: Date | null;
+  open(): this;
+  close(): this;
+  destroy(): void;
+}
+
 // ─── Union ────────────────────────────────────────────────────────────────────
 
 /** Union of all handle types — returned by `init()`. */
@@ -513,6 +626,9 @@ export type AnyHandle =
   | LiquidTextareaHandle
   | LiquidSelectHandle
   | LiquidCheckboxHandle
+  | LiquidRadioHandle
+  | LiquidFileUploadHandle
+  | LiquidDatePickerHandle
   | LiquidDialHandle
   | LiquidTooltipHandle
   | LiquidProgressHandle;
