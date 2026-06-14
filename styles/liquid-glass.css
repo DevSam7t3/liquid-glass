@@ -216,6 +216,164 @@
   color: rgba(255, 255, 255, 0.4);
 }
 
+/* ── Textarea ───────────────────────────────────────────────── */
+
+.lg-textarea-wrapper {
+  position: relative;
+  display: grid; /* grid trick: wrapper height follows content */
+  width: 340px;
+  will-change: transform;
+}
+
+/* Hidden ghost that mirrors textarea content and drives the wrapper height */
+.lg-textarea-wrapper::after {
+  content: attr(data-replicated-value) ' ';
+  white-space: pre-wrap;
+  word-break: break-word;
+  visibility: hidden;
+  pointer-events: none;
+  padding: 0.9rem 1.5rem;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: 0.03em;
+  border-radius: 16px;
+  box-sizing: border-box;
+  grid-area: 1/1/2/2; /* same cell as the textarea */
+}
+
+.lg-textarea-field {
+  grid-area: 1/1/2/2; /* occupies same grid cell as ::after */
+  width: 100%;
+  border: none;
+  background: none;
+  padding: 0.9rem 1.5rem;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  outline: none;
+  z-index: 5;
+  letter-spacing: 0.03em;
+  border-radius: 16px;
+  resize: none;
+  line-height: 1.5;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.lg-textarea-field::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* ── Select ─────────────────────────────────────────────────── */
+
+.lg-select-wrapper {
+  position: relative;
+  width: 340px;
+  height: 60px;
+  will-change: transform;
+  cursor: pointer;
+}
+
+.lg-select-display {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.lg-select-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.03em;
+}
+
+.lg-select-label.lg-select-placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.lg-select-chevron {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.7);
+  will-change: transform;
+  flex-shrink: 0;
+}
+
+.lg-select-chevron svg {
+  width: 100%;
+  height: 100%;
+}
+
+.lg-select-native {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 10;
+  border: none;
+  background: none;
+  font-size: 1rem;
+}
+
+/* ── Checkbox ───────────────────────────────────────────────── */
+
+.lg-checkbox {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.lg-checkbox-box {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  will-change: transform;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.lg-checkbox-check {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.lg-checkbox-check svg {
+  width: 20px;
+  height: 20px;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.6));
+}
+
+.lg-checkbox-label-text {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.03em;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
 /* ── Dial ───────────────────────────────────────────────────── */
 
 .lg-dial {

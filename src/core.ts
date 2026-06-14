@@ -174,6 +174,11 @@ export function createLiquidGlass(
       refractiveIndex: opts.refractiveIndex,
       profile: opts.profile,
     });
+    // Update feImage dimensions so the displacement/specular maps cover the full element.
+    refs.dispImgEl.setAttribute('width', String(w2));
+    refs.dispImgEl.setAttribute('height', String(h2));
+    refs.specImgEl.setAttribute('width', String(w2));
+    refs.specImgEl.setAttribute('height', String(h2));
     injectImages(refs, maps.dispUrl, maps.specUrl);
     currentMaxDisp = maps.maxDisplacement;
     refs.dispMapEl.setAttribute('scale', String(currentMaxDisp));

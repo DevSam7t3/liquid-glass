@@ -5,6 +5,9 @@ import {
   createLiquidSlider,
   createLiquidCursor,
   createLiquidInput,
+  createLiquidTextarea,
+  createLiquidSelect,
+  createLiquidCheckbox,
   createLiquidDial,
   createLiquidProgress,
 } from './components.js';
@@ -17,6 +20,9 @@ import type {
   LiquidSliderOptions,
   LiquidCursorOptions,
   LiquidInputOptions,
+  LiquidTextareaOptions,
+  LiquidSelectOptions,
+  LiquidCheckboxOptions,
   LiquidDialOptions,
   LiquidProgressOptions,
 } from './types.js';
@@ -43,8 +49,14 @@ function parseDataset(ds: DOMStringMap): Record<string, unknown> {
   bool('checked');
   num('min');
   num('max');
-  num('value');
+  // Parse value as a number when it looks numeric, otherwise keep as string
+  // (needed so select data-value="opt-id" works alongside slider data-value="50")
+  if (ds['value'] != null) {
+    const n = parseFloat(ds['value'] as string);
+    out['value'] = isNaN(n) ? ds['value'] : n;
+  }
   num('step');
+  num('rows');
   num('size');
   num('bezelWidth');
   num('glassThickness');
@@ -103,6 +115,13 @@ export function init(options: InitOptions = {}): AnyHandle[] {
   apply('[data-liquid-slider]', (el, opts) => createLiquidSlider(el, opts as LiquidSliderOptions));
   apply('[data-liquid-cursor]', (el, opts) => createLiquidCursor(el, opts as LiquidCursorOptions));
   apply('[data-liquid-input]', (el, opts) => createLiquidInput(el, opts as LiquidInputOptions));
+  apply('[data-liquid-textarea]', (el, opts) =>
+    createLiquidTextarea(el, opts as LiquidTextareaOptions),
+  );
+  apply('[data-liquid-select]', (el, opts) => createLiquidSelect(el, opts as LiquidSelectOptions));
+  apply('[data-liquid-checkbox]', (el, opts) =>
+    createLiquidCheckbox(el, opts as LiquidCheckboxOptions),
+  );
   apply('[data-liquid-dial]', (el, opts) => createLiquidDial(el, opts as LiquidDialOptions));
   apply('[data-liquid-progress]', (el, opts) =>
     createLiquidProgress(el, opts as LiquidProgressOptions),

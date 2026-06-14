@@ -284,6 +284,121 @@ export interface LiquidInputHandle {
   destroy(): void;
 }
 
+// ─── Textarea ─────────────────────────────────────────────────────────────────
+
+export interface LiquidTextareaEventMap {
+  focus: FocusEvent;
+  blur: FocusEvent;
+  input: { value: string; element: Element };
+  change: { value: string; element: Element };
+  destroy: undefined;
+}
+
+export interface LiquidTextareaOptions extends GlassOptions {
+  placeholder?: string;
+  value?: string;
+  /** Initial visible row count. Default: 4. */
+  rows?: number;
+}
+
+/** Returned by `createLiquidTextarea()`. */
+export interface LiquidTextareaHandle {
+  readonly element: Element;
+  on<K extends keyof LiquidTextareaEventMap>(
+    event: K,
+    fn: (payload: LiquidTextareaEventMap[K]) => void,
+  ): this;
+  off<K extends keyof LiquidTextareaEventMap>(
+    event: K,
+    fn?: (payload: LiquidTextareaEventMap[K]) => void,
+  ): this;
+  once<K extends keyof LiquidTextareaEventMap>(
+    event: K,
+    fn: (payload: LiquidTextareaEventMap[K]) => void,
+  ): this;
+  value: string;
+  focus(): this;
+  blur(): this;
+  destroy(): void;
+}
+
+// ─── Select ───────────────────────────────────────────────────────────────────
+
+export interface LiquidSelectOption {
+  value: string;
+  label: string;
+}
+
+export interface LiquidSelectEventMap {
+  change: { value: string; label: string; element: Element };
+  focus: FocusEvent;
+  blur: FocusEvent;
+  destroy: undefined;
+}
+
+export interface LiquidSelectOptions extends GlassOptions {
+  /** Option list. */
+  options?: LiquidSelectOption[];
+  /** Initially selected value. */
+  value?: string;
+  /** Placeholder text shown when no option is selected. Default: `'Select…'`. */
+  placeholder?: string;
+}
+
+/** Returned by `createLiquidSelect()`. */
+export interface LiquidSelectHandle {
+  readonly element: Element;
+  on<K extends keyof LiquidSelectEventMap>(
+    event: K,
+    fn: (payload: LiquidSelectEventMap[K]) => void,
+  ): this;
+  off<K extends keyof LiquidSelectEventMap>(
+    event: K,
+    fn?: (payload: LiquidSelectEventMap[K]) => void,
+  ): this;
+  once<K extends keyof LiquidSelectEventMap>(
+    event: K,
+    fn: (payload: LiquidSelectEventMap[K]) => void,
+  ): this;
+  value: string;
+  setOptions(opts: LiquidSelectOption[]): this;
+  destroy(): void;
+}
+
+// ─── Checkbox ─────────────────────────────────────────────────────────────────
+
+export interface LiquidCheckboxEventMap {
+  change: { checked: boolean; element: Element };
+  destroy: undefined;
+}
+
+export interface LiquidCheckboxOptions extends GlassOptions {
+  /** Initial checked state. Default: `false`. */
+  checked?: boolean;
+  /** Optional text label rendered beside the box. */
+  label?: string;
+}
+
+/** Returned by `createLiquidCheckbox()`. */
+export interface LiquidCheckboxHandle {
+  readonly element: Element;
+  on<K extends keyof LiquidCheckboxEventMap>(
+    event: K,
+    fn: (payload: LiquidCheckboxEventMap[K]) => void,
+  ): this;
+  off<K extends keyof LiquidCheckboxEventMap>(
+    event: K,
+    fn?: (payload: LiquidCheckboxEventMap[K]) => void,
+  ): this;
+  once<K extends keyof LiquidCheckboxEventMap>(
+    event: K,
+    fn: (payload: LiquidCheckboxEventMap[K]) => void,
+  ): this;
+  checked: boolean;
+  toggle(): this;
+  destroy(): void;
+}
+
 // ─── Dial ─────────────────────────────────────────────────────────────────────
 
 export interface LiquidDialEventMap {
@@ -395,6 +510,9 @@ export type AnyHandle =
   | LiquidSliderHandle
   | LiquidCursorHandle
   | LiquidInputHandle
+  | LiquidTextareaHandle
+  | LiquidSelectHandle
+  | LiquidCheckboxHandle
   | LiquidDialHandle
   | LiquidTooltipHandle
   | LiquidProgressHandle;

@@ -10,10 +10,7 @@
       href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&display=swap"
       rel="stylesheet"
     />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@avenra/liquid-glass/styles/liquid-glass.css"
-    />
+    <link rel="stylesheet" href="../styles/liquid-glass.css" />
     <style>
       :root {
         --bg: #09090b;
@@ -248,6 +245,17 @@
         gap: 1.2rem;
         padding: 2rem;
       }
+      #s-textarea {
+        background: radial-gradient(circle at 50% 50%, #0a2820, #030d07);
+      }
+      #s-select {
+        background: radial-gradient(circle at 50% 50%, #2a1800, #0a0600);
+      }
+      #s-checkbox {
+        background: radial-gradient(circle at 50% 50%, #2a0f1e, #0a0309);
+        flex-direction: column;
+        gap: 1.2rem;
+      }
 
       /* Lens */
       .lens-content {
@@ -416,7 +424,7 @@
   <body>
     <!-- ══════════════════════════════════════════════ HEADER -->
     <header class="page-header">
-      <span class="badge">@avenra/liquid-glass · v1.0.0</span>
+      <span class="badge">@avenra/liquid-glass · v1.1.0</span>
       <h1 class="page-title">Liquid Glass</h1>
       <p class="page-sub">
         Physics-based SVG displacement lens for the web. One import. Zero dependencies.
@@ -761,6 +769,76 @@
           <span class="muted">Click buttons to update…</span>
         </div>
       </article>
+      <!-- 12 ── Textarea -->
+      <article class="exhibit span-8">
+        <div class="exhibit-info">
+          <span class="exhibit-no">12</span>
+          <h2 class="exhibit-title">Fluid Textarea</h2>
+          <p class="exhibit-desc">
+            Auto-resizes as you type, micro-vibration on each keystroke, scale spring on focus.
+          </p>
+        </div>
+        <div class="stage" id="s-textarea">
+          <div
+            class="orb"
+            style="background: #059669; width: 250px; height: 250px; top: -50px; right: 10%"
+          ></div>
+          <div
+            class="orb"
+            style="background: #0891b2; width: 180px; height: 180px; bottom: -30px; left: 5%"
+          ></div>
+          <div id="demoTextarea"></div>
+        </div>
+        <div class="event-log" id="taLog">
+          <span class="muted">Type to see events…</span>
+        </div>
+      </article>
+
+      <!-- 13 ── Select -->
+      <article class="exhibit span-4">
+        <div class="exhibit-info">
+          <span class="exhibit-no">13</span>
+          <h2 class="exhibit-title">Glass Select</h2>
+          <p class="exhibit-desc">
+            Native OS dropdown with a glass skin and spring-animated chevron.
+          </p>
+        </div>
+        <div class="stage" id="s-select">
+          <div
+            class="orb"
+            style="background: #d97706; width: 280px; height: 280px; top: -60px; right: -20px"
+          ></div>
+          <div
+            class="orb"
+            style="background: #7c3aed; width: 160px; height: 160px; bottom: -30px; left: 10%"
+          ></div>
+          <div id="demoSelect"></div>
+        </div>
+        <div class="event-log" id="selLog">
+          <span class="muted">Select an option…</span>
+        </div>
+      </article>
+
+      <!-- 14 ── Checkbox -->
+      <article class="exhibit span-4">
+        <div class="exhibit-info">
+          <span class="exhibit-no">14</span>
+          <h2 class="exhibit-title">Liquid Checkbox</h2>
+          <p class="exhibit-desc">Spring-animated glass checkmark, keyboard-accessible.</p>
+        </div>
+        <div class="stage" id="s-checkbox">
+          <div
+            class="orb"
+            style="background: #ec4899; width: 260px; height: 260px; top: -60px; right: -20px"
+          ></div>
+          <div id="cbNotify"></div>
+          <div id="cbUpdates"></div>
+          <div id="cbAnalytics"></div>
+        </div>
+        <div class="event-log" id="cbLog">
+          <span class="muted">Click a checkbox…</span>
+        </div>
+      </article>
     </main>
 
     <!-- ══════════════════════════════════════════════ SCRIPTS -->
@@ -774,8 +852,8 @@
       })();
     </script>
 
-    <!-- CDN (production) -->
-    <script src="https://cdn.jsdelivr.net/npm/@avenra/liquid-glass/dist/liquid-glass.umd.min.js"></script>
+    <!-- local build -->
+    <script src="../dist/liquid-glass.umd.js"></script>
 
     <script type="module">
       const {
@@ -785,6 +863,9 @@
         createLiquidSlider,
         createLiquidCursor,
         createLiquidInput,
+        createLiquidTextarea,
+        createLiquidSelect,
+        createLiquidCheckbox,
         createLiquidDial,
         createLiquidTooltip,
         createLiquidProgress,
@@ -1010,6 +1091,48 @@
       document.getElementById('progRnd').addEventListener('click', () => {
         bar.value = Math.floor(Math.random() * 101);
       });
+
+      // ── 12  Textarea ─────────────────────────────────────────────────────────────
+      const taLog = document.getElementById('taLog');
+      createLiquidTextarea('#demoTextarea', { placeholder: 'Share your thoughts…', rows: 4 })
+        .on('focus', () => log(taLog, 'focus'))
+        .on('blur', () => log(taLog, 'blur'))
+        .on('input', ({ value }) => {
+          const preview = value.slice(0, 32) + (value.length > 32 ? '…' : '');
+          log(taLog, `input → "${preview}"`);
+        })
+        .on('change', ({ value }) =>
+          log(taLog, `change — ${value.split('\n').length} line(s), ${value.length} char(s)`),
+        );
+
+      // ── 13  Select ────────────────────────────────────────────────────────────────
+      const selLog = document.getElementById('selLog');
+      createLiquidSelect('#demoSelect', {
+        placeholder: 'Choose a theme…',
+        options: [
+          { value: 'aurora', label: 'Aurora' },
+          { value: 'midnight', label: 'Midnight' },
+          { value: 'sunset', label: 'Sunset' },
+          { value: 'ocean', label: 'Ocean' },
+        ],
+      })
+        .on('focus', () => log(selLog, 'focus'))
+        .on('blur', () => log(selLog, 'blur'))
+        .on('change', ({ value, label }) => log(selLog, `change → "${label}" (${value})`));
+
+      // ── 14  Checkbox ─────────────────────────────────────────────────────────────
+      const cbLog = document.getElementById('cbLog');
+      createLiquidCheckbox('#cbNotify', { label: 'Email notifications', checked: true }).on(
+        'change',
+        ({ checked }) => log(cbLog, `notify → ${checked}`),
+      );
+      createLiquidCheckbox('#cbUpdates', { label: 'Auto-updates' }).on('change', ({ checked }) =>
+        log(cbLog, `updates → ${checked}`),
+      );
+      createLiquidCheckbox('#cbAnalytics', { label: 'Analytics', checked: true }).on(
+        'change',
+        ({ checked }) => log(cbLog, `analytics → ${checked}`),
+      );
     </script>
   </body>
 </html>

@@ -18,6 +18,16 @@ import type {
   LiquidInputHandle,
   LiquidInputEventMap,
   LiquidInputOptions,
+  LiquidTextareaHandle,
+  LiquidTextareaEventMap,
+  LiquidTextareaOptions,
+  LiquidSelectHandle,
+  LiquidSelectEventMap,
+  LiquidSelectOptions,
+  LiquidSelectOption,
+  LiquidCheckboxHandle,
+  LiquidCheckboxEventMap,
+  LiquidCheckboxOptions,
   LiquidDialHandle,
   LiquidDialEventMap,
   LiquidDialOptions,
@@ -1080,6 +1090,537 @@ export function createLiquidTooltip(
   // Start hidden
   (el as HTMLElement).style.opacity = '0';
   (el as HTMLElement).style.transform = 'translateX(-50%) translateY(20px) scale(0.5)';
+
+  af = requestAnimationFrame(loop);
+  return handle;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Liquid Textarea
+// ─────────────────────────────────────────────────────────────────────────────
+
+class LiquidTextareaHandleImpl
+  extends EventEmitter<LiquidTextareaEventMap>
+  implements LiquidTextareaHandle
+{
+  readonly element: Element;
+  private readonly _ta: HTMLTextAreaElement;
+  private readonly _autoResize: () => void;
+  private readonly _cleanup: () => void;
+
+  constructor(
+    element: Element,
+    ta: HTMLTextAreaElement,
+    autoResize: () => void,
+    cleanup: () => void,
+  ) {
+    super();
+    this.element = element;
+    this._ta = ta;
+    this._autoResize = autoResize;
+    this._cleanup = cleanup;
+  }
+
+  get value(): string {
+    return this._ta.value;
+  }
+  set value(v: string) {
+    this._ta.value = v;
+    this._autoResize();
+  }
+  focus(): this {
+    this._ta.focus();
+    return this;
+  }
+  blur(): this {
+    this._ta.blur();
+    return this;
+  }
+  destroy(): void {
+    this._cleanup();
+    this._emit('destroy');
+  }
+}
+
+/**
+ * Glass-wrapped multi-line textarea with auto-resize and micro-vibration on typing.
+ *
+ * Uses the CSS grid replication trick: a hidden ::after ghost mirrors the textarea
+ * content via data-replicated-value, driving the wrapper's height purely through CSS.
+ * No scrollHeight measurement — works in all browsers regardless of positioning context.
+ */
+export function createLiquidTextarea(
+  target: string | Element,
+  options: LiquidTextareaOptions = {},
+): LiquidTextareaHandle {
+  const el = resolveEl(target);
+  const { placeholder = '', value: initVal = '', rows = 4, ...glassOpts } = options;
+
+  el.classList.add('lg-textarea-wrapper');
+
+  const minH = rows * 24 + 32;
+  // min-height ensures the wrapper is never smaller than the requested row count,
+  // even when the ghost ::after has less content.
+  (el as HTMLElement).style.minHeight = minH + 'px';
+
+  // Sync initial value to the ghost before appending the textarea so glass reads
+  // the correct el.clientHeight on first measurement.
+  (el as HTMLElement).dataset.replicatedValue = initVal;
+
+  const ta = document.createElement('textarea');
+  ta.className = 'lg-textarea-field';
+  ta.placeholder = placeholder;
+  ta.value = initVal;
+  ta.rows = rows;
+  el.appendChild(ta);
+
+  // No explicit height — glass auto-detects from el.clientHeight (driven by CSS grid).
+  const glass = createLiquidGlass(el, {
+    width: 340,
+    radius: 16,
+    bezelWidth: 15,
+    glassThickness: 60,
+    refractiveIndex: 1.5,
+    blur: 0.5,
+    saturation: 1.2,
+    specularSlope: 0.7,
+    ...glassOpts,
+  }) as InternalGlass;
+
+  const sp = { sc: new Spring(1, 400, 20), sx: new Spring(1, 400, 25), sy: new Spring(1, 400, 25) };
+  let af: number | null = null;
+
+  function loop() {
+    sp.sc.setTarget(1);
+    sp.sx.setTarget(1);
+    sp.sy.setTarget(1);
+    const s = sp.sc.update(DT),
+      sx = sp.sx.update(DT),
+      sy = sp.sy.update(DT);
+    (el as HTMLElement).style.transform = `scale(${s * sx}, ${s * sy})`;
+    glass._setScale(glass._getMaxDisp() * s);
+    if (!Object.values(sp).every((spr) => spr.isSettled())) af = requestAnimationFrame(loop);
+    else af = null;
+  }
+  function kick() {
+    if (!af) af = requestAnimationFrame(loop);
+  }
+
+  function autoResize() {
+    // Reset ta to intrinsic height so scrollHeight measures true content, not
+    // a previously-set value (scrollHeight >= clientHeight, so stale heights
+    // would prevent the textarea from ever shrinking back down).
+    ta.style.height = 'auto';
+    // Reading scrollHeight forces a synchronous reflow with height:auto applied,
+    // giving us the true content height even when content exceeds the rows attribute.
+    const newH = Math.max(minH, ta.scrollHeight);
+    // Grow the textarea so the user can see all typed content without scrolling.
+    ta.style.height = newH + 'px';
+    // Give el an explicit definite height so the absolutely-positioned glass layers
+    // (.lg-inner, .lg-clone with inset:0) know how tall the containing block is.
+    (el as HTMLElement).style.height = newH + 'px';
+    // Keep ghost in sync (drives CSS grid as a fallback measurement aid).
+    (el as HTMLElement).dataset.replicatedValue = ta.value;
+  }
+
+  const handle = new LiquidTextareaHandleImpl(el, ta, autoResize, () => {
+    if (af !== null) cancelAnimationFrame(af);
+    glass.destroy();
+    ev.runAll();
+    ta.remove();
+    el.classList.remove('lg-textarea-wrapper');
+    (el as HTMLElement).style.transform = '';
+    (el as HTMLElement).style.minHeight = '';
+    (el as HTMLElement).style.height = '';
+    delete (el as HTMLElement).dataset.replicatedValue;
+  });
+
+  const ev = makeCleanupTracker();
+  // Commit the initial height so glass layers have a definite containing-block height.
+  autoResize();
+
+  ev.add(ta, 'focus', (e) => {
+    sp.sc.setTarget(1.02);
+    kick();
+    handle._emit('focus', e as FocusEvent);
+  });
+  ev.add(ta, 'blur', (e) => {
+    sp.sc.setTarget(1.0);
+    kick();
+    handle._emit('blur', e as FocusEvent);
+    handle._emit('change', { value: ta.value, element: el });
+  });
+  ev.add(ta, 'input', () => {
+    sp.sx.velocity += 1.0;
+    sp.sy.velocity -= 0.5;
+    kick();
+    autoResize();
+    handle._emit('input', { value: ta.value, element: el });
+  });
+
+  return handle;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Liquid Select
+// ─────────────────────────────────────────────────────────────────────────────
+
+class LiquidSelectHandleImpl
+  extends EventEmitter<LiquidSelectEventMap>
+  implements LiquidSelectHandle
+{
+  readonly element: Element;
+  private _value: string;
+  private readonly _native: HTMLSelectElement;
+  private readonly _labelEl: HTMLElement;
+  private readonly _placeholder: string;
+  private readonly _cleanup: () => void;
+
+  constructor(
+    element: Element,
+    native: HTMLSelectElement,
+    labelEl: HTMLElement,
+    placeholder: string,
+    initial: string,
+    cleanup: () => void,
+  ) {
+    super();
+    this.element = element;
+    this._native = native;
+    this._labelEl = labelEl;
+    this._placeholder = placeholder;
+    this._value = initial;
+    this._cleanup = cleanup;
+  }
+
+  get value(): string {
+    return this._value;
+  }
+  set value(v: string) {
+    this._value = v;
+    this._native.value = v;
+    this._syncLabel();
+  }
+
+  private _syncLabel() {
+    const opt = Array.from(this._native.options).find((o) => o.value === this._value);
+    if (opt && this._value !== '') {
+      this._labelEl.textContent = opt.text;
+      this._labelEl.classList.remove('lg-select-placeholder');
+    } else {
+      this._labelEl.textContent = this._placeholder;
+      this._labelEl.classList.add('lg-select-placeholder');
+    }
+  }
+
+  setOptions(opts: LiquidSelectOption[]): this {
+    while (this._native.options.length > 0) this._native.remove(0);
+    const ph = document.createElement('option');
+    ph.value = '';
+    ph.text = this._placeholder;
+    ph.disabled = true;
+    ph.selected = !this._value;
+    this._native.add(ph);
+    opts.forEach((o) => {
+      const opt = document.createElement('option');
+      opt.value = o.value;
+      opt.text = o.label;
+      if (o.value === this._value) opt.selected = true;
+      this._native.add(opt);
+    });
+    this._syncLabel();
+    return this;
+  }
+
+  /** @internal */ _syncValue(v: string) {
+    this._value = v;
+  }
+
+  destroy(): void {
+    this._cleanup();
+    this._emit('destroy');
+  }
+}
+
+/**
+ * Glass-wrapped native select with animated chevron and custom label display.
+ */
+export function createLiquidSelect(
+  target: string | Element,
+  options: LiquidSelectOptions = {},
+): LiquidSelectHandle {
+  const el = resolveEl(target);
+  const {
+    options: items = [],
+    value: initVal = '',
+    placeholder = 'Select…',
+    ...glassOpts
+  } = options;
+
+  el.classList.add('lg-select-wrapper');
+
+  const glass = createLiquidGlass(el, {
+    width: 340,
+    height: 60,
+    radius: 30,
+    bezelWidth: 15,
+    glassThickness: 60,
+    refractiveIndex: 1.5,
+    blur: 0.5,
+    saturation: 1.2,
+    specularSlope: 0.7,
+    ...glassOpts,
+  }) as InternalGlass;
+
+  const display = document.createElement('div');
+  display.className = 'lg-select-display';
+
+  const labelEl = document.createElement('span');
+  labelEl.className = 'lg-select-label lg-select-placeholder';
+  labelEl.textContent = placeholder;
+
+  const chevron = document.createElement('span');
+  chevron.className = 'lg-select-chevron';
+  chevron.innerHTML =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" ' +
+    'stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
+
+  display.appendChild(labelEl);
+  display.appendChild(chevron);
+  el.appendChild(display);
+
+  const native = document.createElement('select');
+  native.className = 'lg-select-native';
+
+  const phOpt = document.createElement('option');
+  phOpt.value = '';
+  phOpt.text = placeholder;
+  phOpt.disabled = true;
+  phOpt.selected = !initVal;
+  native.add(phOpt);
+
+  items.forEach((o) => {
+    const opt = document.createElement('option');
+    opt.value = o.value;
+    opt.text = o.label;
+    if (o.value === initVal) opt.selected = true;
+    native.add(opt);
+  });
+
+  el.appendChild(native);
+
+  if (initVal) {
+    const found = items.find((o) => o.value === initVal);
+    if (found) {
+      labelEl.textContent = found.label;
+      labelEl.classList.remove('lg-select-placeholder');
+    }
+  }
+
+  const sp = { sc: new Spring(1, 400, 20), cv: new Spring(0, 300, 20) };
+  let af: number | null = null;
+
+  function loop() {
+    sp.sc.setTarget(1);
+    const s = sp.sc.update(DT),
+      cv = sp.cv.update(DT);
+    (el as HTMLElement).style.transform = `scale(${s})`;
+    glass._setScale(glass._getMaxDisp() * s);
+    (chevron as HTMLElement).style.transform = `rotate(${cv * 180}deg)`;
+    if (!Object.values(sp).every((spr) => spr.isSettled())) af = requestAnimationFrame(loop);
+    else af = null;
+  }
+  function kick() {
+    if (!af) af = requestAnimationFrame(loop);
+  }
+
+  const handle = new LiquidSelectHandleImpl(el, native, labelEl, placeholder, initVal, () => {
+    if (af !== null) cancelAnimationFrame(af);
+    glass.destroy();
+    ev.runAll();
+    display.remove();
+    native.remove();
+    el.classList.remove('lg-select-wrapper');
+    (el as HTMLElement).style.transform = '';
+  });
+
+  const ev = makeCleanupTracker();
+  ev.add(native, 'focus', (e) => {
+    sp.sc.setTarget(1.03);
+    sp.cv.setTarget(1);
+    kick();
+    handle._emit('focus', e as FocusEvent);
+  });
+  ev.add(native, 'blur', (e) => {
+    sp.sc.setTarget(1.0);
+    sp.cv.setTarget(0);
+    kick();
+    handle._emit('blur', e as FocusEvent);
+  });
+  ev.add(native, 'change', () => {
+    handle._syncValue(native.value);
+    const opt = native.options[native.selectedIndex];
+    if (opt && native.value !== '') {
+      labelEl.textContent = opt.text;
+      labelEl.classList.remove('lg-select-placeholder');
+    } else {
+      labelEl.textContent = placeholder;
+      labelEl.classList.add('lg-select-placeholder');
+    }
+    sp.sc.velocity += 0.5;
+    kick();
+    handle._emit('change', { value: native.value, label: opt?.text ?? '', element: el });
+  });
+
+  return handle;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Liquid Checkbox
+// ─────────────────────────────────────────────────────────────────────────────
+
+class LiquidCheckboxHandleImpl
+  extends EventEmitter<LiquidCheckboxEventMap>
+  implements LiquidCheckboxHandle
+{
+  readonly element: Element;
+  private _state: { chk: boolean };
+  private readonly _setChecked: (v: boolean, emit: boolean) => void;
+  private readonly _cleanup: () => void;
+
+  constructor(
+    element: Element,
+    state: { chk: boolean },
+    setChecked: (v: boolean, emit: boolean) => void,
+    cleanup: () => void,
+  ) {
+    super();
+    this.element = element;
+    this._state = state;
+    this._setChecked = setChecked;
+    this._cleanup = cleanup;
+  }
+
+  get checked(): boolean {
+    return this._state.chk;
+  }
+  set checked(v: boolean) {
+    this._setChecked(!!v, false);
+  }
+
+  toggle(): this {
+    this._setChecked(!this._state.chk, true);
+    return this;
+  }
+
+  destroy(): void {
+    this._cleanup();
+    this._emit('destroy');
+  }
+}
+
+/**
+ * Glass-wrapped checkbox with spring-animated checkmark.
+ */
+export function createLiquidCheckbox(
+  target: string | Element,
+  options: LiquidCheckboxOptions = {},
+): LiquidCheckboxHandle {
+  const el = resolveEl(target);
+  const { checked: initChecked = false, label = '', ...glassOpts } = options;
+
+  el.classList.add('lg-checkbox');
+  el.setAttribute('role', 'checkbox');
+  el.setAttribute('tabindex', '0');
+  el.setAttribute('aria-checked', String(!!initChecked));
+
+  const box = document.createElement('div');
+  box.className = 'lg-checkbox-box';
+
+  const checkEl = document.createElement('div');
+  checkEl.className = 'lg-checkbox-check';
+  checkEl.innerHTML =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" ' +
+    'stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  box.appendChild(checkEl);
+
+  el.appendChild(box);
+
+  if (label) {
+    const labelEl = document.createElement('span');
+    labelEl.className = 'lg-checkbox-label-text';
+    labelEl.textContent = label;
+    el.appendChild(labelEl);
+  }
+
+  const glass = createLiquidGlass(box, {
+    width: 36,
+    height: 36,
+    radius: 10,
+    bezelWidth: 8,
+    glassThickness: 40,
+    refractiveIndex: 1.6,
+    blur: 0.3,
+    saturation: 1.3,
+    specularSlope: 0.8,
+    ...glassOpts,
+  }) as InternalGlass;
+
+  const state = { chk: !!initChecked };
+  const sp = {
+    sc: new Spring(initChecked ? 1 : 0, 600, 30),
+    box: new Spring(1, 400, 20),
+  };
+  let af: number | null = null;
+
+  // Set initial visual state without waiting for the first frame
+  (checkEl as HTMLElement).style.transform = `scale(${initChecked ? 1 : 0})`;
+  (checkEl as HTMLElement).style.opacity = String(initChecked ? 1 : 0);
+
+  function loop() {
+    sp.sc.setTarget(state.chk ? 1 : 0);
+    sp.box.setTarget(1);
+    const sc = sp.sc.update(DT),
+      bs = sp.box.update(DT);
+    (checkEl as HTMLElement).style.transform = `scale(${sc})`;
+    (checkEl as HTMLElement).style.opacity = String(Math.max(0, sc));
+    (box as HTMLElement).style.transform = `scale(${bs})`;
+    glass._setScale(glass._getMaxDisp() * bs);
+    if (!Object.values(sp).every((spr) => spr.isSettled())) af = requestAnimationFrame(loop);
+    else af = null;
+  }
+  function kick() {
+    if (!af) af = requestAnimationFrame(loop);
+  }
+
+  function setChecked(v: boolean, emit: boolean) {
+    state.chk = v;
+    el.setAttribute('aria-checked', String(v));
+    sp.box.velocity += 1.5;
+    kick();
+    if (emit) handle._emit('change', { checked: state.chk, element: el });
+  }
+
+  const handle = new LiquidCheckboxHandleImpl(el, state, setChecked, () => {
+    if (af !== null) cancelAnimationFrame(af);
+    glass.destroy();
+    ev.runAll();
+    box.remove();
+    el.classList.remove('lg-checkbox');
+    el.removeAttribute('role');
+    el.removeAttribute('tabindex');
+    el.removeAttribute('aria-checked');
+  });
+
+  const ev = makeCleanupTracker();
+  ev.add(el, 'click', () => setChecked(!state.chk, true));
+  ev.add(el, 'keydown', (e: Event) => {
+    const key = (e as KeyboardEvent).key;
+    if (key === ' ' || key === 'Enter') {
+      e.preventDefault();
+      setChecked(!state.chk, true);
+    }
+  });
 
   af = requestAnimationFrame(loop);
   return handle;
