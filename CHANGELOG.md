@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-06-15
+
+### Added
+
+- `createLiquidTextarea()` — auto-resizing glass textarea with `focus`, `blur`, `input`, and `change` events
+- `createLiquidSelect()` — native `<select>` with glass skin and spring-animated chevron
+- `createLiquidCheckbox()` — spring-animated glass checkmark, keyboard-accessible
+- `createLiquidRadio()` — exclusive radio group with spring-animated selection dot and roving-tabindex keyboard navigation
+- `createLiquidFileUpload()` — glass dropzone with click-to-browse, drag-and-drop (`dragenter`/`drop`), and spring scale-up on hover
+- `createLiquidDatePicker()` — glass trigger that opens a spring-animated calendar popup; closes on outside click
+- `data-liquid-textarea`, `data-liquid-select`, `data-liquid-checkbox`, `data-liquid-radio`, `data-liquid-file-upload`, `data-liquid-datepicker` attributes for zero-JS auto-init via `init()`
+
+### Fixed
+
+- `rebuild()` in `core.ts` now updates `feImage` `width`/`height` attributes on resize, so the displacement map always covers the full element (previously the glass border stayed at its initial size when the element grew)
+- Textarea auto-resize now correctly sets both the `<textarea>` and the wrapper element height on each input event
+
+## [1.1.0] - 2026-06-07
+
+### Added
+
+- shadcn/ui component registry integration — Button and Input components available as registry entries
+- CDN distribution: library assets now served from CDN; registry components import via CDN URL
+
 ## [1.0.0] - 2026-06-04
 
 ### Added
@@ -31,5 +55,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Spring physics engine (`Spring` class) exposed as a low-level export
 - Full low-level API: `compute1D`, `compute2D`, `computeSpecular`, `buildMaps`, `createFilterSVG`, `setScale`
 
-[unreleased]: https://github.com/DevSam7t3/liquid-glass/compare/v1.0.0...HEAD
+[unreleased]: https://github.com/DevSam7t3/liquid-glass/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/DevSam7t3/liquid-glass/compare/v1.1.0...v1.2.0
+[1.1.0]: https://github.com/DevSam7t3/liquid-glass/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/DevSam7t3/liquid-glass/releases/tag/v1.0.0
