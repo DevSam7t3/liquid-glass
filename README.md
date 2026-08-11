@@ -1,9 +1,16 @@
-# @avenra/liquid-glass
+<p align="center">
+  <img alt="header" src="https://shieldcn.dev/header/dots.svg?title=%40avenra%2Fliquid-glass&amp;subtitle=A+delightful+liquid+glass+component+library&amp;logo=https%3A%2F%2Fdocs.avenra.online%2Flogo.png&amp;mode=dark&amp;image=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1462331940025-496dfbfc7564%3Fw%3D1600%26q%3D70%26fit%3Dcrop%26fm%3Djpg&amp;overlay=1" />
+</p>
 
-[![CI](https://github.com/DevSam7t3/liquid-glass/actions/workflows/ci.yml/badge.svg)](https://github.com/DevSam7t3/liquid-glass/actions/workflows/ci.yml)
-[![CodeQL](https://github.com/DevSam7t3/liquid-glass/actions/workflows/codeql.yml/badge.svg)](https://github.com/DevSam7t3/liquid-glass/actions/workflows/codeql.yml)
-[![npm version](https://img.shields.io/npm/v/@avenra/liquid-glass.svg)](https://www.npmjs.com/package/@avenra/liquid-glass)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+<p align="center">
+  <a href="https://github.com/DevSam7t3/liquid-glass/actions"><img alt="CI" src="https://shieldcn.dev/github/DevSam7t3/liquid-glass/ci.svg?theme=zinc&amp;split=true&amp;logo=github" /></a>
+  <a href="https://www.npmjs.com/package/@avenra/liquid-glass"><img alt="version" src="https://shieldcn.dev/npm/@avenra/liquid-glass.svg?split=true" /></a>
+  <a href="https://www.npmjs.com/package/@avenra/liquid-glass"><img alt="license" src="https://shieldcn.dev/npm/license/@avenra/liquid-glass.svg?split=true" /></a>
+</p>
+
+<p align="center">
+  <img alt="chart" src="https://shieldcn.dev/chart/npm/%40avenra/liquid-glass.svg?bg=transparent&amp;logo=false" />
+</p>
 
 Physics-based liquid glass UI effect for the web. Snell's law refraction baked into an SVG displacement map, specular rim light, spring animations — zero runtime dependencies.
 
@@ -100,18 +107,18 @@ Override these in your stylesheet to skin every glass element without touching J
 
 ### Common options (all components inherit these)
 
-| Option             | Type                                                    | Default            | Description                                           |
-| ------------------ | ------------------------------------------------------- | ------------------ | ----------------------------------------------------- |
-| `bezelWidth`       | `number`                                                | `20`               | Refractive bezel rim width in px                      |
-| `glassThickness`   | `number`                                                | `80`               | Virtual glass depth (larger = more lateral ray drift) |
-| `refractiveIndex`  | `number`                                                | `1.5`              | Index of refraction n₂ (1.0 = no bend, 2.0 = strong)  |
-| `profile`          | `'convexSquircle' \| 'convexCircle' \| 'concave' \| fn` | `'convexSquircle'` | Bezel surface shape                                   |
-| `blur`             | `number`                                                | `0.5`              | Pre-displacement Gaussian blur stdDeviation           |
-| `saturation`       | `number`                                                | `1.3`              | Post-displacement colour saturation multiplier        |
-| `specularSlope`    | `number`                                                | `0.8`              | Specular highlight intensity 0–1                      |
-| `filterMode`       | `'screen' \| 'composite'`                               | `'screen'`         | SVG filter blend pipeline                             |
-| `width` / `height` | `number`                                                | auto               | Override element dimensions for map generation        |
-| `radius`           | `number \| null`                                        | auto               | Corner radius override (null = read from CSS)         |
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `bezelWidth` | `number` | `20` | Refractive bezel rim width in px |
+| `glassThickness` | `number` | `80` | Virtual glass depth (larger = more lateral ray drift) |
+| `refractiveIndex` | `number` | `1.5` | Index of refraction n₂ (1.0 = no bend, 2.0 = strong) |
+| `profile` | `'convexSquircle' \\\| 'convexCircle' \\\| 'concave' \\\| fn` | `'convexSquircle'` | Bezel surface shape |
+| `blur` | `number` | `0.5` | Pre-displacement Gaussian blur stdDeviation |
+| `saturation` | `number` | `1.3` | Post-displacement colour saturation multiplier |
+| `specularSlope` | `number` | `0.8` | Specular highlight intensity 0–1 |
+| `filterMode` | `'screen' \\\| 'composite'` | `'screen'` | SVG filter blend pipeline |
+| `width` / `height` | `number` | auto | Override element dimensions for map generation |
+| `radius` | `number \\\| null` | auto | Corner radius override (null = read from CSS) |
 
 ### Common handle API (every factory returns this)
 
@@ -142,10 +149,10 @@ glass.refresh(); // rebuild maps (auto-called on resize)
 glass.destroy();
 ```
 
-| Event     | Payload                             |
-| --------- | ----------------------------------- |
-| `resize`  | `{ width: number; height: number }` |
-| `destroy` | —                                   |
+| Event | Payload |
+| --- | --- |
+| `resize` | `{ width: number; height: number }` |
+| `destroy` | — |
 
 ---
 
@@ -158,16 +165,16 @@ btn.setLabel('Saved ✓');
 btn.destroy();
 ```
 
-| Option  | Type     | Description |
-| ------- | -------- | ----------- |
+| Option | Type | Description |
+| --- | --- | --- |
 | `label` | `string` | Button text |
 
-| Event                       | Payload      |
-| --------------------------- | ------------ |
-| `click`                     | `MouseEvent` |
+| Event | Payload |
+| --- | --- |
+| `click` | `MouseEvent` |
 | `mouseenter` / `mouseleave` | `MouseEvent` |
-| `mousedown` / `mouseup`     | `MouseEvent` |
-| `destroy`                   | —            |
+| `mousedown` / `mouseup` | `MouseEvent` |
+| `destroy` | — |
 
 ---
 
@@ -181,14 +188,14 @@ sw.toggle();
 sw.destroy();
 ```
 
-| Option    | Type      | Default |
-| --------- | --------- | ------- |
+| Option | Type | Default |
+| --- | --- | --- |
 | `checked` | `boolean` | `false` |
 
-| Event     | Payload                                  |
-| --------- | ---------------------------------------- |
-| `change`  | `{ checked: boolean; element: Element }` |
-| `destroy` | —                                        |
+| Event | Payload |
+| --- | --- |
+| `change` | `{ checked: boolean; element: Element }` |
+| `destroy` | — |
 
 ---
 
@@ -202,17 +209,17 @@ sl.value = 75; // programmatic setter
 sl.destroy();
 ```
 
-| Option        | Type     | Default     |
-| ------------- | -------- | ----------- |
+| Option | Type | Default |
+| --- | --- | --- |
 | `min` / `max` | `number` | `0` / `100` |
-| `value`       | `number` | `50`        |
-| `step`        | `number` | `1`         |
+| `value` | `number` | `50` |
+| `step` | `number` | `1` |
 
-| Event     | Payload                               |
-| --------- | ------------------------------------- |
-| `input`   | `{ value: number; element: Element }` |
-| `change`  | `{ value: number; element: Element }` |
-| `destroy` | —                                     |
+| Event | Payload |
+| --- | --- |
+| `input` | `{ value: number; element: Element }` |
+| `change` | `{ value: number; element: Element }` |
+| `destroy` | — |
 
 ---
 
@@ -225,9 +232,9 @@ const cursor = createLiquidCursor('#stage', { size: 90 });
 cursor.destroy(); // restores the default cursor
 ```
 
-| Option | Type     | Default |
-| ------ | -------- | ------- |
-| `size` | `number` | `90`    |
+| Option | Type | Default |
+| --- | --- | --- |
+| `size` | `number` | `90` |
 
 ---
 
@@ -247,18 +254,18 @@ inp.focus();
 inp.destroy();
 ```
 
-| Option        | Type     | Default  |
-| ------------- | -------- | -------- |
-| `placeholder` | `string` | `''`     |
-| `value`       | `string` | `''`     |
-| `type`        | `string` | `'text'` |
+| Option | Type | Default |
+| --- | --- | --- |
+| `placeholder` | `string` | `''` |
+| `value` | `string` | `''` |
+| `type` | `string` | `'text'` |
 
-| Event     | Payload                               |
-| --------- | ------------------------------------- |
-| `focus`   | `FocusEvent`                          |
-| `blur`    | `FocusEvent`                          |
-| `input`   | `{ value: string; element: Element }` |
-| `destroy` | —                                     |
+| Event | Payload |
+| --- | --- |
+| `focus` | `FocusEvent` |
+| `blur` | `FocusEvent` |
+| `input` | `{ value: string; element: Element }` |
+| `destroy` | — |
 
 ---
 
@@ -273,14 +280,14 @@ dial.angle = 90; // programmatic setter (degrees)
 dial.destroy();
 ```
 
-| Option  | Type               | Default |
-| ------- | ------------------ | ------- |
-| `value` | `number` (degrees) | `0`     |
+| Option | Type | Default |
+| --- | --- | --- |
+| `value` | `number` (degrees) | `0` |
 
-| Event     | Payload                               |
-| --------- | ------------------------------------- |
-| `change`  | `{ angle: number; element: Element }` |
-| `destroy` | —                                     |
+| Event | Payload |
+| --- | --- |
+| `change` | `{ angle: number; element: Element }` |
+| `destroy` | — |
 
 ---
 
@@ -302,15 +309,15 @@ tip.setText('Updated text');
 tip.destroy();
 ```
 
-| Option    | Type                | Required |
-| --------- | ------------------- | -------- |
-| `trigger` | `string \| Element` | ✓        |
-| `text`    | `string`            | —        |
+| Option | Type | Required |
+| --- | --- | --- |
+| `trigger` | `string \\\| Element` | ✓ |
+| `text` | `string` | — |
 
-| Event           | Payload |
-| --------------- | ------- |
-| `show` / `hide` | —       |
-| `destroy`       | —       |
+| Event | Payload |
+| --- | --- |
+| `show` / `hide` | — |
+| `destroy` | — |
 
 ---
 
@@ -325,14 +332,14 @@ bar.value = 65; // triggers spring + squish
 bar.destroy();
 ```
 
-| Option  | Type           | Default |
-| ------- | -------------- | ------- |
-| `value` | `number` 0–100 | `0`     |
+| Option | Type | Default |
+| --- | --- | --- |
+| `value` | `number` 0–100 | `0` |
 
-| Event     | Payload                               |
-| --------- | ------------------------------------- |
-| `change`  | `{ value: number; element: Element }` |
-| `destroy` | —                                     |
+| Event | Payload |
+| --- | --- |
+| `change` | `{ value: number; element: Element }` |
+| `destroy` | — |
 
 ---
 
@@ -349,12 +356,12 @@ const handles = init({ root: '#myApp' }); // limit to subtree
 
 **Supported data attributes:**
 
-| Attribute            | Options via `data-*`                                              |
-| -------------------- | ----------------------------------------------------------------- |
-| `data-liquid-button` | `data-label`                                                      |
-| `data-liquid-switch` | `data-checked`                                                    |
-| `data-liquid-slider` | `data-min`, `data-max`, `data-value`, `data-step`                 |
-| `data-liquid-glass`  | `data-bezel-width`, `data-refractive-index`, `data-profile`, etc. |
+| Attribute | Options via `data-*` |
+| --- | --- |
+| `data-liquid-button` | `data-label` |
+| `data-liquid-switch` | `data-checked` |
+| `data-liquid-slider` | `data-min`, `data-max`, `data-value`, `data-step` |
+| `data-liquid-glass` | `data-bezel-width`, `data-refractive-index`, `data-profile`, etc. |
 
 Returns `AnyHandle[]` — one handle per matched element.
 
@@ -445,10 +452,10 @@ requestAnimationFrame(function loop() {
 
 ## Browser compatibility
 
-| Feature                                | Chrome | Edge | Firefox | Safari |
-| -------------------------------------- | ------ | ---- | ------- | ------ |
-| SVG displacement + specular refraction | ✓      | ✓    | —       | —      |
-| CSS blur/saturate fallback             | ✓      | ✓    | ✓       | ✓      |
+| Feature | Chrome | Edge | Firefox | Safari |
+| --- | --- | --- | --- | --- |
+| SVG displacement + specular refraction | ✓ | ✓ | — | — |
+| CSS blur/saturate fallback | ✓ | ✓ | ✓ | ✓ |
 
 ---
 
@@ -477,3 +484,11 @@ Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md)
 ## Security
 
 If you discover a security vulnerability, please see our [Security Policy](SECURITY.md).
+
+## Getting started
+
+Write anything here using **Markdown**. Add headings, lists, code blocks, links, and tables.
+
+```bash
+npm install your-package
+```
